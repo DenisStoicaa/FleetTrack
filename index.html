@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FleetTrack - mockup</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>FleetTrack</h1>
+    <p>Evidența tirurilor din flotă: remorcă, șofer, destinație și starea cursei.</p>
+    <p class="app-count">3 tiruri, dintre care 2 în tranzit</p>
+  </header>
+
+  <main class="container">
+    <section class="panel">
+      <h2>Adaugă un tir</h2>
+      <form class="item-form">
+        <label>Număr și model
+          <input type="text" name="name" placeholder="Ex: B 404 FLT · MAN TGX" maxlength="100" />
+        </label>
+        <label>Tip remorcă
+          <select name="trailerType">
+            <option value="refrigerated">Frigorifică</option>
+            <option value="curtainsider">Prelată</option>
+            <option value="tanker">Cisternă</option>
+          </select>
+        </label>
+        <button type="submit">Adaugă</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>Flota mea</h2>
+      <!-- Când lista e goală: <p class="empty">Nu există niciun tir în flotă.</p> -->
+      <ul class="item-list">
+        <li class="item-card">
+          <div>
+            <h3>B 101 FLT · Volvo FH16</h3>
+            <p class="item-meta">Ion Popescu → Berlin</p>
+            <span class="badge badge-refrigerated">Frigorifică</span>
+          </div>
+          <span class="status">În tranzit</span>
+        </li>
+        <li class="item-card done">
+          <div>
+            <h3>B 202 FLT · Scania R450</h3>
+            <p class="item-meta">Maria Ionescu → Cluj-Napoca</p>
+            <span class="badge badge-curtainsider">Prelată</span>
+          </div>
+          <span class="status">Sosit</span>
+        </li>
+        <li class="item-card">
+          <div>
+            <h3>CJ 303 FLT · DAF XF</h3>
+            <p class="item-meta">Andrei Georgescu → Istanbul</p>
+            <span class="badge badge-tanker">Cisternă</span>
+          </div>
+          <span class="status">În tranzit</span>
+        </li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="app-footer">FleetTrack · Proiect Tehnologii Web</footer>
+</body>
+</html>

@@ -1,0 +1,231 @@
+/* 4.1 Color variables: every color is defined once, here */
+* { box-sizing: border-box; }
+
+:root {
+  --bg: #f3f5f8;          /* page background */
+  --card: #ffffff;        /* panel background */
+  --text: #1c2530;
+  --muted: #6b7280;
+  --accent: #e8590c;      /* FleetTrack orange */
+  --accent-dark: #c2410c;
+  --accent-soft: #fff1e6;
+  --border: #e2e6ec;
+  --on-accent: #ffffff;   /* text on accent / badges */
+  --status-bg: #e0f2fe;
+  --status-text: #075985;
+  --done-bg: #dcfce7;
+  --done-text: #166534;
+  /* one color for each trailer type */
+  --refrigerated: #0284c7;
+  --curtainsider: #7c3aed;
+  --tanker: #b45309;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* 4.2 Header */
+.app-header {
+  background: var(--accent);
+  color: var(--on-accent);
+  text-align: center;
+  padding: 32px 16px;
+}
+
+.app-header h1 {
+  margin: 0 0 4px;
+  font-size: 2rem;
+}
+
+.app-header p {
+  margin: 4px 0;
+}
+
+.app-count {
+  font-weight: 600;
+}
+
+/* 4.3 Two columns (Grid) */
+.container {
+  max-width: 1000px;
+  margin: 24px auto;
+  padding: 0 16px;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* 4.4 Panels */
+.panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.panel h2 {
+  margin-top: 0;
+  font-size: 1.25rem;
+}
+
+/* 4.5 Form (Flexbox) */
+.item-form,
+.item-form label {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-form {
+  gap: 16px;
+}
+
+.item-form label {
+  gap: 6px;
+  font-weight: 600;
+}
+
+.item-form input,
+.item-form select {
+  font: inherit;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.item-form button {
+  font: inherit;
+  font-weight: 600;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--on-accent);
+  cursor: pointer;
+}
+
+/* 4.6 List and cards (Flexbox) */
+.item-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.item-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.item-card h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.item-meta {
+  margin: 2px 0 8px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.status {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: var(--status-bg);
+  color: var(--status-text);
+}
+
+.empty {
+  color: var(--muted);
+  text-align: center;
+}
+
+/* 4.7 Colored badges, one class per trailer type */
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--on-accent);
+}
+
+.badge-refrigerated { background: var(--refrigerated); }
+.badge-curtainsider { background: var(--curtainsider); }
+.badge-tanker { background: var(--tanker); }
+
+/* 4.8 Finished item: the truck has arrived */
+.item-card.done h3 {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+
+.item-card.done .status {
+  background: var(--done-bg);
+  color: var(--done-text);
+}
+
+/* Footer */
+.app-footer {
+  text-align: center;
+  padding: 24px 16px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* 5 Interactive states */
+.item-card:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.item-form button:hover {
+  background: var(--accent-dark);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* 5 Dark theme: only the variable values change */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #12151b;
+    --card: #1b2029;
+    --text: #e5e7eb;
+    --muted: #9ca3af;
+    --accent: #f76707;
+    --accent-dark: #fd7e14;
+    --accent-soft: #2b2018;
+    --border: #2f3744;
+    --status-bg: #0c3a55;
+    --status-text: #bae6fd;
+    --done-bg: #14432a;
+    --done-text: #bbf7d0;
+  }
+}
+
+/* 4.9 Narrow screens: one column (kept last so it overrides .container) */
+@media (max-width: 700px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+}
