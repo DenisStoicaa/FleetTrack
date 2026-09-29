@@ -4,7 +4,7 @@
 - Claude (Claude Code)
 
 ## Conversations
-- <share link>  (reading the Stage 1 guide and building the FleetTrack mockup)
+- <[share link](https://claude.ai/code/session_01SSKczkaWGnDNPZRz64GzRx)>  (reading the Stage 1 guide and building the FleetTrack mockup)
 
 ## Key requests
 ### 1. Choosing the data model
