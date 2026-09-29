@@ -37,3 +37,16 @@ Details per stage: see the [ai-log/](ai-log/) folder.
 
 - [x] Stage 1: static mockup
 - [ ] Stage 2: data logic in JavaScript
+
+## Stage 1 checklist
+
+| ID    | Requirement                                          | Where (permalink) | How to check |
+| ----- | ---------------------------------------------------- | ----------------- | ------------ |
+| S1-R1 | README: description, fields, sample data, how to run | [README.md#L1-L26](https://github.com/DenisStoicaa/FleetTrack/blob/c2e0b47a42b3fc6108d894cb7dd7f9af52f5beef/README.md#L1-L26) | read |
+| S1-R2 | AI usage section                                     | [README.md#L28-L34](https://github.com/DenisStoicaa/FleetTrack/blob/c2e0b47a42b3fc6108d894cb7dd7f9af52f5beef/README.md#L28-L34) | read |
+| S1-R3 | AI log for stage 1                                   | [ai-log/etapa-01.md](https://github.com/DenisStoicaa/FleetTrack/blob/c2e0b47a42b3fc6108d894cb7dd7f9af52f5beef/ai-log/etapa-01.md) | read |
+| S1-R4 | header, form (text + select), 3 cards with own data  | [index.html#L10-L66](https://github.com/DenisStoicaa/FleetTrack/blob/c2e0b47a42b3fc6108d894cb7dd7f9af52f5beef/index.html#L10-L66) | open the page |
+| S1-R5 | finished card looks different                        | [style.css#L174-L183](https://github.com/DenisStoicaa/FleetTrack/blob/c2e0b47a42b3fc6108d894cb7dd7f9af52f5beef/style.css#L174-L183) (`.done`) | look at the B 202 FLT card |
+| S1-R6 | 2 columns on desktop, 1 under 700px                  | [style.css#L54-L62](https://github.com/DenisStoicaa/FleetTrack/blob/c2e0b47a42b3fc6108d894cb7dd7f9af52f5beef/style.css#L54-L62), [style.css#L227-L231](https://github.com/DenisStoicaa/FleetTrack/blob/c2e0b47a42b3fc6108d894cb7dd7f9af52f5beef/style.css#L227-L231) (`@media`) | resize < 700px |
+| S1-R7 | visible focus, readable dark theme                   | [style.css#L203-L224](https://github.com/DenisStoicaa/FleetTrack/blob/c2e0b47a42b3fc6108d894cb7dd7f9af52f5beef/style.css#L203-L224) | Tab; dark mode |
+| S1-R8 | commit "Stage 1" pushed                              | [c2e0b47](https://github.com/DenisStoicaa/FleetTrack/commit/c2e0b47a42b3fc6108d894cb7dd7f9af52f5beef) | commit history |
