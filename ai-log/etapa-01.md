@@ -23,4 +23,4 @@
 - Changed or rejected: <what I changed>
 
 ## What I learned / what did not work
-<3-4 lines written by me: e.g. how grid-template-columns and the @media rule work together, why box-sizing: border-box matters, why every color must be a variable for the dark theme to work.>
+cum împarte grid-template-columns: 1fr 2fr pagina în două coloane, cum o trece @media (max-width: 700px) pe o singură coloană, de ce tema întunecată merge doar pentru că toate culorile sunt variabile
