@@ -3,19 +3,51 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>FleetTrack - mockup</title>
+  <title>FleetTrack · Evidența flotei</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header class="app-header">
-    <h1>FleetTrack</h1>
-    <p>Evidența tirurilor din flotă: remorcă, șofer, destinație și starea cursei.</p>
-    <p class="app-count">3 tiruri, dintre care 2 în tranzit</p>
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M2 6h12v10H2z"/><path d="M14 9h4l4 4v3h-8z"/><circle cx="6.5" cy="17.5" r="2"/><circle cx="17.5" cy="17.5" r="2"/></svg>
+        </span>
+        <div>
+          <h1>FleetTrack</h1>
+          <p>Evidența tirurilor din flotă: remorcă, șofer, destinație și starea cursei.</p>
+        </div>
+      </div>
+      <p class="app-count">3 tiruri, dintre care 2 în tranzit</p>
+
+      <dl class="stats">
+        <div class="stat">
+          <dt>Total flotă</dt>
+          <dd>3</dd>
+        </div>
+        <div class="stat stat-transit">
+          <dt>În tranzit</dt>
+          <dd>2</dd>
+        </div>
+        <div class="stat stat-done">
+          <dt>Sosite</dt>
+          <dd>1</dd>
+        </div>
+        <div class="stat">
+          <dt>Curse internaționale</dt>
+          <dd>2</dd>
+        </div>
+      </dl>
+    </div>
   </header>
 
   <main class="container">
-    <section class="panel">
+    <section class="panel panel-form">
       <h2>Adaugă un tir</h2>
+      <p class="panel-hint">Tirul nou intră în flotă cu starea „În tranzit”.</p>
       <form class="item-form">
         <label>Număr și model
           <input type="text" name="name" placeholder="Ex: B 404 FLT · MAN TGX" maxlength="100" />
@@ -27,37 +59,82 @@
             <option value="tanker">Cisternă</option>
           </select>
         </label>
-        <button type="submit">Adaugă</button>
+        <button type="submit">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          Adaugă în flotă
+        </button>
       </form>
     </section>
 
     <section class="panel">
-      <h2>Flota mea</h2>
+      <div class="panel-head">
+        <h2>Flota mea</h2>
+        <span class="count-pill">3 tiruri</span>
+      </div>
       <!-- Când lista e goală: <p class="empty">Nu există niciun tir în flotă.</p> -->
       <ul class="item-list">
-        <li class="item-card">
-          <div>
-            <h3>B 101 FLT · Volvo FH16</h3>
-            <p class="item-meta">Ion Popescu → Berlin</p>
-            <span class="badge badge-refrigerated">Frigorifică</span>
+        <li class="item-card" style="--i: 0">
+          <div class="item-body">
+            <div class="item-title">
+              <span class="plate"><span class="plate-eu">RO</span>B 101 FLT</span>
+              <h3>Volvo FH16</h3>
+            </div>
+            <p class="item-meta">
+              <span class="driver">Ion Popescu</span>
+              <span class="route-line" aria-hidden="true"></span>
+              <span class="dest">Berlin</span>
+            </p>
+            <div class="tags">
+              <span class="badge badge-refrigerated">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M4.9 4.9l14.2 14.2M2 12h20M4.9 19.1L19.1 4.9"/></svg>
+                Frigorifică
+              </span>
+              <span class="tag">EU</span>
+            </div>
           </div>
-          <span class="status">În tranzit</span>
+          <span class="status"><span class="dot" aria-hidden="true"></span>În tranzit</span>
         </li>
-        <li class="item-card done">
-          <div>
-            <h3>B 202 FLT · Scania R450</h3>
-            <p class="item-meta">Maria Ionescu → Cluj-Napoca</p>
-            <span class="badge badge-curtainsider">Prelată</span>
+        <li class="item-card done" style="--i: 1">
+          <div class="item-body">
+            <div class="item-title">
+              <span class="plate"><span class="plate-eu">RO</span>B 202 FLT</span>
+              <h3>Scania R450</h3>
+            </div>
+            <p class="item-meta">
+              <span class="driver">Maria Ionescu</span>
+              <span class="route-line" aria-hidden="true"></span>
+              <span class="dest">Cluj-Napoca</span>
+            </p>
+            <div class="tags">
+              <span class="badge badge-curtainsider">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18M3 12h18M3 19h18"/></svg>
+                Prelată
+              </span>
+              <span class="tag">Domestic</span>
+            </div>
           </div>
-          <span class="status">Sosit</span>
+          <span class="status"><span class="dot" aria-hidden="true"></span>Sosit</span>
         </li>
-        <li class="item-card">
-          <div>
-            <h3>CJ 303 FLT · DAF XF</h3>
-            <p class="item-meta">Andrei Georgescu → Istanbul</p>
-            <span class="badge badge-tanker">Cisternă</span>
+        <li class="item-card" style="--i: 2">
+          <div class="item-body">
+            <div class="item-title">
+              <span class="plate"><span class="plate-eu">RO</span>CJ 303 FLT</span>
+              <h3>DAF XF</h3>
+            </div>
+            <p class="item-meta">
+              <span class="driver">Andrei Georgescu</span>
+              <span class="route-line" aria-hidden="true"></span>
+              <span class="dest">Istanbul</span>
+            </p>
+            <div class="tags">
+              <span class="badge badge-tanker">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></svg>
+                Cisternă
+              </span>
+              <span class="tag">Non-EU</span>
+            </div>
           </div>
-          <span class="status">În tranzit</span>
+          <span class="status"><span class="dot" aria-hidden="true"></span>În tranzit</span>
         </li>
       </ul>
     </section>
