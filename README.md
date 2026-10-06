@@ -30,13 +30,23 @@ Open `index.html` in a browser. No build step, no server.
 | Tool   | Used for                                                                                   |
 | ------ | ------------------------------------------------------------------------------------------ |
 | Claude | stage 1: reading the stage guide, drafting the README, HTML structure and CSS (Grid, Flexbox, variables, dark theme) |
+| Claude | stage 2: reading the stage guide, writing `tiruri.js` (array of objects, map/filter/find/reduce, immutable functions, validation, console tests) |
 
 Details per stage: see the [ai-log/](ai-log/) folder.
+
+## Stage 2: data logic
+
+Plain JavaScript, no DOM. `tiruri.js` holds the `tiruri` array and the functions
+that read and change it: `listeazaNume`, `numaraInTranzit`, `cautaTir` (by name, driver or destination),
+`adaugaTir` (with validation), `comutaSosit`, `stergeTir` and `nextId`.
+None of the functions changes the list it receives; each one returns a new list.
+Results are printed in the browser console (F12).
 
 ## Status
 
 - [x] Stage 1: static mockup
-- [ ] Stage 2: data logic in JavaScript
+- [x] Stage 2: data logic in JavaScript
+- [ ] Stage 3: Vite and React project
 
 ## Stage 1 checklist
 
