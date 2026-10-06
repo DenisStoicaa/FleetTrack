@@ -60,3 +60,15 @@ Results are printed in the browser console (F12).
 | S1-R6 | 2 columns on desktop, 1 under 700px                  | [style.css#L54-L62](https://github.com/DenisStoicaa/FleetTrack/blob/c2e0b47a42b3fc6108d894cb7dd7f9af52f5beef/style.css#L54-L62), [style.css#L227-L231](https://github.com/DenisStoicaa/FleetTrack/blob/c2e0b47a42b3fc6108d894cb7dd7f9af52f5beef/style.css#L227-L231) (`@media`) | resize < 700px |
 | S1-R7 | visible focus, readable dark theme                   | [style.css#L203-L224](https://github.com/DenisStoicaa/FleetTrack/blob/c2e0b47a42b3fc6108d894cb7dd7f9af52f5beef/style.css#L203-L224) | Tab; dark mode |
 | S1-R8 | commit "Stage 1" pushed                              | [c2e0b47](https://github.com/DenisStoicaa/FleetTrack/commit/c2e0b47a42b3fc6108d894cb7dd7f9af52f5beef) | commit history |
+
+## Stage 2 checklist
+
+| ID    | Requirement                                   | Where (permalink) | How to check |
+| ----- | --------------------------------------------- | ----------------- | ------------ |
+| S2-R1 | JS file linked, logs on page load             | [index.html#L67](https://github.com/DenisStoicaa/FleetTrack/blob/9af2941dbd451225faa8312e0e78db2cf5a3a204/index.html#L67) (script) | open page, F12 |
+| S2-R2 | 3+ items with id, name, state, tag            | [tiruri.js#L4-L14](https://github.com/DenisStoicaa/FleetTrack/blob/9af2941dbd451225faa8312e0e78db2cf5a3a204/tiruri.js#L4-L14) | read |
+| S2-R3 | list, count, search, add, toggle, delete      | [tiruri.js#L16-L89](https://github.com/DenisStoicaa/FleetTrack/blob/9af2941dbd451225faa8312e0e78db2cf5a3a204/tiruri.js#L16-L89) | console output |
+| S2-R4 | add rejects empty name and invalid tag        | [tiruri.js#L48-L67](https://github.com/DenisStoicaa/FleetTrack/blob/9af2941dbd451225faa8312e0e78db2cf5a3a204/tiruri.js#L48-L67) | last 2 console lines |
+| S2-R5 | original array unchanged after add            | [tiruri.js#L101](https://github.com/DenisStoicaa/FleetTrack/blob/9af2941dbd451225faa8312e0e78db2cf5a3a204/tiruri.js#L101) | console line |
+| S2-R6 | README Stage 2 section + AI log               | [README.md](https://github.com/DenisStoicaa/FleetTrack/blob/9af2941dbd451225faa8312e0e78db2cf5a3a204/README.md), [ai-log/etapa-02.md](https://github.com/DenisStoicaa/FleetTrack/blob/9af2941dbd451225faa8312e0e78db2cf5a3a204/ai-log/etapa-02.md) | read |
+| S2-R7 | commit "Stage 2" pushed                       | [9af2941](https://github.com/DenisStoicaa/FleetTrack/commit/9af2941dbd451225faa8312e0e78db2cf5a3a204) | commit history |
