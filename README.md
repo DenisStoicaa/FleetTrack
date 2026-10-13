@@ -23,7 +23,14 @@ Sample data used across all stages:
 
 ## How to run
 
-Open `index.html` in a browser. No build step, no server.
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Then open the address printed in the terminal (http://localhost:5173).
+The stage 1–2 static files (HTML mockup, CSS, `tiruri.js`) are kept in `mockup/`.
 
 ## AI usage
 
@@ -31,6 +38,7 @@ Open `index.html` in a browser. No build step, no server.
 | ------ | ------------------------------------------------------------------------------------------ |
 | Claude | stage 1: reading the stage guide, drafting the README, HTML structure and CSS (Grid, Flexbox, variables, dark theme) |
 | Claude | stage 2: reading the stage guide, writing `tiruri.js` (array of objects, map/filter/find/reduce, immutable functions, validation, console tests) |
+| Claude | stage 3: reading the stage guide, creating the Vite + React project, removing the demo files, writing `App.jsx` with the header computed from data |
 
 Details per stage: see the [ai-log/](ai-log/) folder.
 
@@ -42,11 +50,18 @@ that read and change it: `listeazaNume`, `numaraInTranzit`, `cautaTir` (by name,
 None of the functions changes the list it receives; each one returns a new list.
 Results are printed in the browser console (F12).
 
+## Stage 3: Vite and React project
+
+The app now lives in `frontend/`, built with Vite. The data from stage 2
+moved into the main component; the list is still printed raw.
+The header (counter and the four stat tiles) is computed from the `tiruri` array:
+total, in transit, arrived and international routes (category other than Domestic).
+
 ## Status
 
 - [x] Stage 1: static mockup
 - [x] Stage 2: data logic in JavaScript
-- [ ] Stage 3: Vite and React project
+- [x] Stage 3: Vite and React project
 
 ## Stage 1 checklist
 
