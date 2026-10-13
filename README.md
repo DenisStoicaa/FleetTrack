@@ -87,3 +87,15 @@ total, in transit, arrived and international routes (category other than Domesti
 | S2-R5 | original array unchanged after add            | [tiruri.js#L101](https://github.com/DenisStoicaa/FleetTrack/blob/9af2941dbd451225faa8312e0e78db2cf5a3a204/tiruri.js#L101) | console line |
 | S2-R6 | README Stage 2 section + AI log               | [README.md](https://github.com/DenisStoicaa/FleetTrack/blob/9af2941dbd451225faa8312e0e78db2cf5a3a204/README.md), [ai-log/etapa-02.md](https://github.com/DenisStoicaa/FleetTrack/blob/9af2941dbd451225faa8312e0e78db2cf5a3a204/ai-log/etapa-02.md) | read |
 | S2-R7 | commit "Stage 2" pushed                       | [9af2941](https://github.com/DenisStoicaa/FleetTrack/commit/9af2941dbd451225faa8312e0e78db2cf5a3a204) | commit history |
+
+## Stage 3 checklist
+
+| ID    | Requirement                                   | Where (permalink) | How to check |
+| ----- | --------------------------------------------- | ----------------- | ------------ |
+| S3-R1 | npm run dev starts without errors             | [frontend/package.json#L6-L11](https://github.com/DenisStoicaa/FleetTrack/blob/627e5ec8fd9be0ad600a01fcca5e7b336e01e273/frontend/package.json#L6-L11) (scripts) | npm install, npm run dev |
+| S3-R2 | app name and counter computed from data       | [frontend/src/App.jsx#L11-L50](https://github.com/DenisStoicaa/FleetTrack/blob/627e5ec8fd9be0ad600a01fcca5e7b336e01e273/frontend/src/App.jsx#L11-L50) | edit data, save |
+| S3-R3 | data from README, not from the example        | [frontend/src/App.jsx#L3-L8](https://github.com/DenisStoicaa/FleetTrack/blob/627e5ec8fd9be0ad600a01fcca5e7b336e01e273/frontend/src/App.jsx#L3-L8) | compare with README |
+| S3-R4 | stage 1 styles reused                         | [frontend/src/App.css](https://github.com/DenisStoicaa/FleetTrack/blob/627e5ec8fd9be0ad600a01fcca5e7b336e01e273/frontend/src/App.css) | look at the page |
+| S3-R5 | node_modules ignored, build passes            | [frontend/.gitignore#L10-L11](https://github.com/DenisStoicaa/FleetTrack/blob/627e5ec8fd9be0ad600a01fcca5e7b336e01e273/frontend/.gitignore#L10-L11) | npm run build |
+| S3-R6 | README Stage 3 section + AI log               | [README.md#L53-L58](https://github.com/DenisStoicaa/FleetTrack/blob/627e5ec8fd9be0ad600a01fcca5e7b336e01e273/README.md#L53-L58), [ai-log/etapa-03.md](https://github.com/DenisStoicaa/FleetTrack/blob/627e5ec8fd9be0ad600a01fcca5e7b336e01e273/ai-log/etapa-03.md) | read |
+| S3-R7 | commit "Stage 3" pushed                       | [627e5ec](https://github.com/DenisStoicaa/FleetTrack/commit/627e5ec8fd9be0ad600a01fcca5e7b336e01e273) | commit history |
