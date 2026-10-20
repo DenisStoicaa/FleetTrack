@@ -1,44 +1,81 @@
+/* FleetTrack UI · v2
+   Light mode: soft, airy, rounded surfaces (Delvora / Swift Haul references)
+   Dark mode: black UI with an orange glow (Fleet Status reference)
+   The hi-vis orange stays the single accent in both themes. */
+
 /* 4.1 Color variables: every color is defined once, here */
 * { box-sizing: border-box; }
 
 :root {
-  --bg: #f4f2ee;            /* warm paper background */
+  /* surfaces */
+  --bg: #f1efea;                 /* warm off-white */
+  --bg-glow: rgb(255 106 19 / 0.10);
+  --surface: rgb(255 255 255 / 0.55);   /* frosted panel */
+  --surface-border: rgb(255 255 255 / 0.9);
   --card: #ffffff;
-  --card-soft: #faf9f6;
-  --text: #16181d;
-  --muted: #646a75;
-  --border: #e4e1da;
-  --border-strong: #d3cfc6;
-  --accent: #ff6a13;        /* hi-vis orange */
+  --card-soft: #f6f4f0;
+  --chip: #f1efeb;
+
+  /* text */
+  --text: #15171c;
+  --muted: #6c707a;
+  --faint: #a2a5ad;
+
+  /* lines */
+  --border: #e8e5df;
+  --border-strong: #d6d2ca;
+
+  /* accent: hi-vis orange */
+  --accent: #ff6a13;
   --accent-dark: #e85a05;
-  --accent-soft: #fff3ea;
-  --on-accent: #16181d;     /* dark text keeps contrast on orange */
-  --asphalt: #15181e;       /* header */
-  --asphalt-2: #1e222a;
-  --on-asphalt: #f4f2ee;
-  --on-asphalt-muted: #a3a8b2;
-  --lane: #ffc43d;          /* road marking yellow */
+  --accent-soft: #fff1e7;
+  --accent-glow: rgb(255 106 19 / 0.32);
+  --on-accent: #15171c;          /* dark text keeps contrast on orange */
+
+  /* header (light mode: sits on the page, no dark band) */
+  --header-bg:
+    radial-gradient(900px 420px at 92% -20%, var(--bg-glow), transparent 65%),
+    radial-gradient(700px 360px at -10% 0%, rgb(255 255 255 / 0.8), transparent 60%);
+  --on-header: var(--text);
+  --on-header-muted: var(--muted);
+  --stat-bg: var(--card);
+  --stat-border: var(--surface-border);
+
+  /* status */
   --transit: #ff6a13;
   --done: #16a34a;
-  --done-soft: #e8f6ed;
-  --done-text: #116b33;
-  --plate-blue: #1f4fbf;    /* EU strip on the plate */
-  --shadow: 0 1px 2px rgb(22 24 29 / 0.04), 0 4px 16px rgb(22 24 29 / 0.06);
-  --shadow-hover: 0 2px 4px rgb(22 24 29 / 0.06), 0 12px 32px rgb(22 24 29 / 0.10);
+  --done-soft: #e6f5ec;
+  --done-text: #0f6a31;
+  --done-num: #16a34a;
+
+  --plate-blue: #1f4fbf;         /* EU strip on the plate */
+
   /* one color for each trailer type (used on the icon only) */
   --refrigerated: #0284c7;
   --curtainsider: #7c3aed;
   --tanker: #b45309;
 
+  /* depth */
+  --shadow-sm: 0 1px 2px rgb(40 30 15 / 0.04);
+  --shadow: 0 1px 2px rgb(40 30 15 / 0.04), 0 10px 30px -10px rgb(40 30 15 / 0.12);
+  --shadow-hover: 0 2px 6px rgb(40 30 15 / 0.06), 0 22px 44px -14px rgb(40 30 15 / 0.22);
+
   --font-display: "Archivo", "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+
+  --radius-xl: 32px;   /* panels */
+  --radius-lg: 24px;   /* cards, tiles */
   --radius: 14px;
+  --pill: 999px;
 }
 
 body {
   margin: 0;
   font-family: var(--font-display);
-  background: var(--bg);
+  background:
+    radial-gradient(1200px 600px at 50% -200px, rgb(255 255 255 / 0.7), transparent 70%),
+    var(--bg);
+  background-attachment: fixed;
   color: var(--text);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -55,31 +92,29 @@ svg {
   flex-shrink: 0;
 }
 
-/* 4.2 Header: asphalt band with a moving lane line */
+/* 4.2 Header: big italic headline, round brand mark, KPI tiles */
 .app-header {
   position: relative;
-  background:
-    radial-gradient(1200px 300px at 85% -10%, rgb(255 106 19 / 0.18), transparent 60%),
-    linear-gradient(180deg, var(--asphalt-2), var(--asphalt));
-  color: var(--on-asphalt);
-  padding: 40px 16px 56px;
+  background: var(--header-bg);
+  color: var(--on-header);
+  padding: 48px 16px 40px;
   overflow: hidden;
 }
 
+/* dashed route line under the header, slowly moving */
 .app-header::after {
   content: "";
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 18px;
-  height: 4px;
-  background: repeating-linear-gradient(90deg, var(--lane) 0 48px, transparent 48px 88px);
-  opacity: 0.85;
-  animation: drive 3s linear infinite;
+  left: max(16px, calc((100% - 1120px) / 2));
+  right: max(16px, calc((100% - 1120px) / 2));
+  bottom: 14px;
+  height: 2px;
+  background: repeating-linear-gradient(90deg, var(--border-strong) 0 10px, transparent 10px 20px);
+  animation: drive 2.4s linear infinite;
 }
 
 @keyframes drive {
-  to { background-position: -88px 0; }
+  to { background-position: -20px 0; }
 }
 
 .header-inner {
@@ -90,81 +125,125 @@ svg {
 .brand {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 18px;
 }
 
 .brand-mark {
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
   background: var(--accent);
   color: var(--on-accent);
   font-size: 28px;
-  box-shadow: 0 8px 24px rgb(255 106 19 / 0.35);
+  box-shadow:
+    0 0 0 6px var(--card),
+    0 14px 30px -6px var(--accent-glow);
 }
+
+.brand-mark svg { stroke-width: 1.8; }
 
 .app-header h1 {
   margin: 0;
-  font-size: clamp(1.9rem, 4vw, 2.6rem);
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
   font-weight: 800;
-  font-stretch: 125%;
-  letter-spacing: -0.02em;
-  line-height: 1.05;
+  font-style: italic;
+  font-stretch: 105%;
+  letter-spacing: -0.035em;
+  line-height: 1;
 }
 
 .app-header p {
-  margin: 4px 0 0;
-  color: var(--on-asphalt-muted);
+  margin: 8px 0 0;
+  max-width: 52ch;
+  color: var(--on-header-muted);
 }
 
+/* the counter: a soft pill, like the "4h Away" chip */
 .app-header .app-count {
-  margin-top: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 28px;
+  padding: 8px 16px 8px 12px;
+  border-radius: var(--pill);
+  background: var(--stat-bg);
+  border: 1px solid var(--stat-border);
+  box-shadow: var(--shadow-sm);
+  font-size: 0.9rem;
   font-weight: 600;
-  color: var(--on-asphalt);
+  color: var(--on-header);
+}
+
+.app-header .app-count::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
 }
 
 /* KPI tiles: the important numbers, large and first */
 .stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  gap: 14px;
   margin: 16px 0 0;
 }
 
 .stat {
-  padding: 14px 16px;
-  border: 1px solid rgb(255 255 255 / 0.08);
-  border-radius: 12px;
-  background: rgb(255 255 255 / 0.04);
-  backdrop-filter: blur(4px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 18px;
+  min-height: 118px;
+  padding: 18px 20px;
+  border: 1px solid var(--stat-border);
+  border-radius: var(--radius-lg);
+  background: var(--stat-bg);
+  box-shadow: var(--shadow);
 }
 
 .stat dt {
-  font-size: 0.78rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--on-asphalt-muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--on-header-muted);
 }
 
 .stat dd {
-  margin: 4px 0 0;
-  font-family: var(--font-mono);
-  font-size: 2rem;
-  font-weight: 700;
-  line-height: 1;
+  margin: 0;
+  font-size: 2.6rem;
+  font-weight: 800;
+  font-stretch: 110%;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  line-height: 0.9;
 }
 
-.stat-transit dd { color: var(--accent); }
-.stat-done dd { color: #4ade80; }
+/* in transit = the live number, so it gets the accent tile */
+.stat-transit {
+  background:
+    radial-gradient(120% 140% at 100% 0%, rgb(255 255 255 / 0.28), transparent 55%),
+    var(--accent);
+  border-color: transparent;
+  box-shadow: 0 16px 34px -12px var(--accent-glow);
+}
+
+.stat-transit dt,
+.stat-transit dd { color: var(--on-accent); }
+
+.stat-transit dt { opacity: 0.75; }
+
+.stat-done dd { color: var(--done-num); }
 
 /* 4.3 Two columns (Grid) */
 .container {
-  max-width: 1120px;
-  margin: -28px auto 0;
+  max-width: 1152px;   /* 1120px of content + 16px gutters, aligned with the header */
+  margin: 8px auto 0;
   padding: 0 16px;
   display: grid;
   /* Etapa 3: doar panoul cu date; a doua coloană revine în Etapa 7 */
@@ -174,13 +253,15 @@ svg {
   position: relative;
 }
 
-/* 4.4 Panels */
+/* 4.4 Panels: frosted container holding white cards */
 .panel {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-xl);
+  padding: 28px;
   box-shadow: var(--shadow);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 .panel-form {
@@ -190,10 +271,9 @@ svg {
 
 .panel h2 {
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: 700;
-  font-stretch: 112%;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
 }
 
 .panel-hint {
@@ -206,21 +286,21 @@ svg {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 18px;
+  margin: 0 4px 20px;
 }
 
 .count-pill {
   font-family: var(--font-mono);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 500;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: var(--card-soft);
+  padding: 6px 14px;
+  border-radius: var(--pill);
+  background: var(--card);
   border: 1px solid var(--border);
   color: var(--muted);
 }
 
-/* 4.5 Form (Flexbox) */
+/* 4.5 Form (Flexbox): pill fields like the search bars in the references */
 .item-form,
 .item-form label {
   display: flex;
@@ -232,7 +312,8 @@ svg {
 }
 
 .item-form label {
-  gap: 6px;
+  gap: 8px;
+  padding-left: 4px;
   font-size: 0.85rem;
   font-weight: 600;
 }
@@ -242,45 +323,45 @@ svg {
   font: inherit;
   font-size: 1rem;
   font-weight: 400;
-  padding: 11px 12px;
-  border: 1px solid var(--border-strong);
-  border-radius: 10px;
-  background: var(--card-soft);
+  padding: 13px 20px;
+  margin-left: -4px;
+  border: 1px solid var(--border);
+  border-radius: var(--pill);
+  background: var(--card);
   color: var(--text);
   transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
 }
 
 .item-form select {
   appearance: none;
-  padding-right: 36px;
+  padding-right: 44px;
   background-image:
     linear-gradient(45deg, transparent 50%, var(--muted) 50%),
     linear-gradient(135deg, var(--muted) 50%, transparent 50%);
-  background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+  background-position: calc(100% - 24px) 50%, calc(100% - 19px) 50%;
   background-size: 5px 5px;
   background-repeat: no-repeat;
 }
 
 .item-form input::placeholder {
-  color: var(--muted);
-  opacity: 0.7;
+  color: var(--faint);
 }
 
 .item-form button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  margin-top: 4px;
+  gap: 10px;
+  margin-top: 6px;
   font: inherit;
   font-weight: 700;
-  padding: 12px;
+  padding: 15px 22px;
   border: none;
-  border-radius: 10px;
+  border-radius: var(--pill);
   background: var(--accent);
   color: var(--on-accent);
   cursor: pointer;
-  box-shadow: 0 6px 18px rgb(255 106 19 / 0.3);
+  box-shadow: 0 12px 26px -10px var(--accent-glow);
   transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
 }
 
@@ -305,34 +386,36 @@ svg {
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 12px 16px;
-  padding: 16px 18px 16px 22px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  gap: 14px 20px;
+  padding: 20px 22px 20px 24px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
   background: var(--card);
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
-  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
-  animation: rise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  transition: border-color 0.2s, box-shadow 0.25s, transform 0.25s;
+  animation: rise 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both;
   animation-delay: calc(var(--i, 0) * 80ms + 100ms);
 }
 
-/* colored edge: the status at a glance */
+/* status at a glance: a short rounded tab on the left edge */
 .item-card::before {
   content: "";
   position: absolute;
   left: 0;
-  top: 0;
-  bottom: 0;
+  top: 22px;
+  bottom: 22px;
   width: 4px;
+  border-radius: 0 4px 4px 0;
   background: var(--transit);
 }
 
 @keyframes rise {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(12px); }
 }
 
 .item-body {
-  flex: 1 1 260px;
+  flex: 1 1 280px;
   min-width: 0;
 }
 
@@ -340,13 +423,14 @@ svg {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 12px;
 }
 
 .item-card h3 {
   margin: 0;
-  font-size: 1.05rem;
+  font-size: 1.2rem;
   font-weight: 700;
+  letter-spacing: -0.015em;
 }
 
 /* License plate, EU style */
@@ -354,55 +438,73 @@ svg {
   display: inline-flex;
   align-items: stretch;
   font-family: var(--font-mono);
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   background: #fff;
   color: #111;
-  border: 1.5px solid #111;
-  border-radius: 5px;
+  border: 1.5px solid #15171c;
+  border-radius: 7px;
   overflow: hidden;
-  padding-right: 8px;
-  line-height: 1.7;
+  padding-right: 9px;
+  line-height: 1.75;
   white-space: nowrap;
 }
 
 .plate-eu {
   display: inline-flex;
   align-items: flex-end;
-  padding: 0 4px 1px;
-  margin-right: 7px;
+  padding: 0 5px 1px;
+  margin-right: 8px;
   background: var(--plate-blue);
   color: #fff;
-  font-size: 0.6rem;
+  font-size: 0.58rem;
   letter-spacing: 0;
 }
 
+/* driver ── • destination, drawn like the shipment timeline */
 .item-meta {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin: 8px 0 10px;
+  gap: 12px;
+  margin: 12px 0 14px;
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 0.92rem;
 }
 
 .route-line {
   position: relative;
-  flex: 0 1 56px;
+  flex: 0 1 96px;
+  min-width: 40px;
   height: 0;
+  margin: 0 4px;
   border-top: 2px dashed var(--border-strong);
 }
 
+/* origin: hollow ring */
+.route-line::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  top: -6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: 2px solid var(--faint);
+  background: var(--card);
+}
+
+/* destination: accent dot with a soft halo */
 .route-line::after {
   content: "";
   position: absolute;
-  right: -3px;
-  top: -5px;
-  width: 8px;
-  height: 8px;
+  right: -6px;
+  top: -6px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
 }
 
 .driver,
@@ -418,31 +520,33 @@ svg {
 .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
 }
 
 .tag {
+  display: inline-flex;
+  align-items: center;
   font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 500;
-  padding: 3px 8px;
-  border-radius: 6px;
-  background: var(--card-soft);
-  border: 1px solid var(--border);
+  padding: 5px 12px;
+  border-radius: var(--pill);
+  background: var(--chip);
   color: var(--muted);
 }
 
 .status {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   flex-shrink: 0;
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  background: var(--accent-soft);
-  color: var(--accent-dark);
+  padding: 10px 18px 10px 16px;
+  border-radius: var(--pill);
+  font-size: 0.88rem;
+  font-weight: 700;
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: 0 10px 22px -10px var(--accent-glow);
 }
 
 .dot {
@@ -468,21 +572,24 @@ svg {
 }
 
 .empty {
+  margin: 0;
+  padding: 40px 16px;
+  border: 2px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
   color: var(--muted);
   text-align: center;
 }
 
-/* 4.7 Badges, one class per trailer type: neutral chip, colored icon */
+/* 4.7 Badges, one class per trailer type: neutral pill, colored icon */
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 3px 10px 3px 8px;
-  border-radius: 6px;
+  gap: 7px;
+  padding: 5px 13px 5px 10px;
+  border-radius: var(--pill);
   font-size: 0.78rem;
   font-weight: 600;
-  background: var(--card-soft);
-  border: 1px solid var(--border);
+  background: var(--chip);
   color: var(--text);
 }
 
@@ -495,6 +602,8 @@ svg {
 /* 4.8 Finished item: the truck has arrived */
 .item-card.done {
   background: var(--card-soft);
+  box-shadow: none;
+  border-color: var(--border);
 }
 
 .item-card.done::before {
@@ -503,7 +612,7 @@ svg {
 
 .item-card.done h3,
 .item-card.done .plate {
-  opacity: 0.6;
+  opacity: 0.55;
 }
 
 .item-card.done .route-line {
@@ -511,13 +620,20 @@ svg {
   border-color: var(--done);
 }
 
+.item-card.done .route-line::before {
+  border-color: var(--done);
+  background: var(--card-soft);
+}
+
 .item-card.done .route-line::after {
   background: var(--done);
+  box-shadow: 0 0 0 4px var(--done-soft);
 }
 
 .item-card.done .status {
   background: var(--done-soft);
   color: var(--done-text);
+  box-shadow: none;
 }
 
 .item-card.done .dot::after {
@@ -528,20 +644,24 @@ svg {
 .app-footer {
   text-align: center;
   padding: 40px 16px 32px;
-  color: var(--muted);
-  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--faint);
 }
 
 /* 5 Interactive states */
 .item-card:hover {
-  border-color: var(--border-strong);
   box-shadow: var(--shadow-hover);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+}
+
+.item-card.done:hover {
+  border-color: var(--border-strong);
 }
 
 .item-form input:hover,
 .item-form select:hover {
-  border-color: var(--muted);
+  border-color: var(--border-strong);
 }
 
 .item-form input:focus,
@@ -555,7 +675,7 @@ svg {
 .item-form button:hover {
   background: var(--accent-dark);
   transform: translateY(-1px);
-  box-shadow: 0 10px 24px rgb(255 106 19 / 0.35);
+  box-shadow: 0 16px 30px -10px var(--accent-glow);
 }
 
 .item-form button:active {
@@ -564,31 +684,78 @@ svg {
 
 :focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 
-/* 5 Dark theme: only the variable values change */
+/* 5 Dark theme (Fleet Status): mostly the variable values change */
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0e1014;
-    --card: #161a20;
-    --card-soft: #1b2028;
-    --text: #ece9e3;
-    --muted: #9aa0ab;
-    --border: #262c35;
-    --border-strong: #353c47;
+    --bg: #0a0a0c;
+    --bg-glow: rgb(255 106 19 / 0.38);
+    --surface: #121215;
+    --surface-border: rgb(255 255 255 / 0.06);
+    --card: #1a1a1e;
+    --card-soft: #151518;
+    --chip: #26262b;
+
+    --text: #f3f1ec;
+    --muted: #9b9ca4;
+    --faint: #6b6c74;
+
+    --border: #26262b;
+    --border-strong: #3a3a41;
+
     --accent-dark: #ff8a45;
-    --accent-soft: #2e1d12;
-    --asphalt: #08090c;
-    --asphalt-2: #12151b;
-    --done-soft: #12301f;
+    --accent-soft: rgb(255 106 19 / 0.16);
+    --accent-glow: rgb(255 106 19 / 0.45);
+
+    /* the orange glow that bleeds from the top, like the phone headers */
+    --header-bg:
+      radial-gradient(1000px 420px at 85% -30%, var(--bg-glow), transparent 65%),
+      linear-gradient(180deg, #17110d 0%, var(--bg) 100%);
+    --stat-bg: rgb(255 255 255 / 0.04);
+    --stat-border: rgb(255 255 255 / 0.07);
+
+    --done-soft: rgb(74 222 128 / 0.12);
     --done-text: #86efac;
+    --done-num: #4ade80;
+
     --refrigerated: #38bdf8;
     --curtainsider: #a78bfa;
     --tanker: #f59e0b;
-    --shadow: 0 1px 2px rgb(0 0 0 / 0.3);
-    --shadow-hover: 0 12px 32px rgb(0 0 0 / 0.45);
+
+    --shadow-sm: 0 1px 0 rgb(255 255 255 / 0.03) inset;
+    --shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 20px 40px -20px rgb(0 0 0 / 0.6);
+    --shadow-hover: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 24px 48px -16px rgb(0 0 0 / 0.8);
   }
+
+  body { background: var(--bg); }
+
+  .brand-mark {
+    box-shadow:
+      0 0 0 6px rgb(255 255 255 / 0.05),
+      0 0 40px -4px var(--accent-glow);
+  }
+
+  .stat { backdrop-filter: blur(6px); }
+
+  .stat-transit {
+    background:
+      radial-gradient(120% 140% at 100% 0%, rgb(255 255 255 / 0.22), transparent 55%),
+      linear-gradient(160deg, #ff7a2b, #e3550a);
+  }
+
+  .item-card { border-color: rgb(255 255 255 / 0.05); }
+
+  .item-card:hover { border-color: rgb(255 106 19 / 0.35); }
+
+  .item-card.done { border-color: rgb(255 255 255 / 0.04); }
+
+  .item-card.done:hover { border-color: rgb(255 255 255 / 0.1); }
+
+  .plate { border-color: #fff; }
+
+  .count-pill { background: var(--chip); border-color: transparent; }
 }
 
 /* Less motion for users who ask for it */
@@ -611,11 +778,40 @@ svg {
     position: static;
   }
 
-  .stats {
-    grid-template-columns: repeat(2, 1fr);
+  .app-header {
+    padding: 32px 16px 36px;
   }
 
-  .panel {
-    padding: 18px;
+  .brand-mark {
+    width: 52px;
+    height: 52px;
+    font-size: 24px;
+    margin-left: 4px;
   }
+
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .stat {
+    min-height: 100px;
+    padding: 16px;
+  }
+
+  .stat dd { font-size: 2.2rem; }
+
+  .panel {
+    padding: 16px;
+    border-radius: var(--radius-lg);
+  }
+
+  .panel-head { margin: 4px 4px 16px; }
+
+  .item-card {
+    padding: 18px 18px 18px 20px;
+    border-radius: 20px;
+  }
+
+  .status { padding: 8px 14px 8px 12px; }
 }
