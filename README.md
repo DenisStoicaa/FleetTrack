@@ -112,3 +112,15 @@ The list is rendered from the data, through two components in `frontend/src/comp
 | S3-R5 | node_modules ignored, build passes            | [frontend/.gitignore#L10-L11](https://github.com/DenisStoicaa/FleetTrack/blob/627e5ec8fd9be0ad600a01fcca5e7b336e01e273/frontend/.gitignore#L10-L11) | npm run build |
 | S3-R6 | README Stage 3 section + AI log               | [README.md#L53-L58](https://github.com/DenisStoicaa/FleetTrack/blob/627e5ec8fd9be0ad600a01fcca5e7b336e01e273/README.md#L53-L58), [ai-log/etapa-03.md](https://github.com/DenisStoicaa/FleetTrack/blob/627e5ec8fd9be0ad600a01fcca5e7b336e01e273/ai-log/etapa-03.md) | read |
 | S3-R7 | commit "Stage 3" pushed                       | [627e5ec](https://github.com/DenisStoicaa/FleetTrack/commit/627e5ec8fd9be0ad600a01fcca5e7b336e01e273) | commit history |
+
+## Stage 4 checklist
+
+| ID    | Requirement                                   | Where (permalink) | How to check |
+| ----- | --------------------------------------------- | ----------------- | ------------ |
+| S4-R1 | 2+ components in src/components/              | [frontend/src/components/](https://github.com/DenisStoicaa/FleetTrack/tree/f0bacd6888962960546b95324289ccb1a62914e1/frontend/src/components) | open folder |
+| S4-R2 | card receives data through props              | [TirCard.jsx#L17-L50](https://github.com/DenisStoicaa/FleetTrack/blob/f0bacd6888962960546b95324289ccb1a62914e1/frontend/src/components/TirCard.jsx#L17-L50) | read |
+| S4-R3 | map + key={id}, no console warnings           | [TirList.jsx#L12-L18](https://github.com/DenisStoicaa/FleetTrack/blob/f0bacd6888962960546b95324289ccb1a62914e1/frontend/src/components/TirList.jsx#L12-L18) | F12, Console |
+| S4-R4 | message for empty list                        | [TirList.jsx#L5-L8](https://github.com/DenisStoicaa/FleetTrack/blob/f0bacd6888962960546b95324289ccb1a62914e1/frontend/src/components/TirList.jsx#L5-L8) | set array to [] |
+| S4-R5 | state changes the card look                   | [TirCard.jsx#L22](https://github.com/DenisStoicaa/FleetTrack/blob/f0bacd6888962960546b95324289ccb1a62914e1/frontend/src/components/TirCard.jsx#L22) (`done`), [TirCard.jsx#L48](https://github.com/DenisStoicaa/FleetTrack/blob/f0bacd6888962960546b95324289ccb1a62914e1/frontend/src/components/TirCard.jsx#L48) (status) | toggle `arrived` |
+| S4-R6 | README Stage 4 section + AI log               | [README.md#L61-L69](https://github.com/DenisStoicaa/FleetTrack/blob/f0bacd6888962960546b95324289ccb1a62914e1/README.md#L61-L69), [ai-log/etapa-04.md](https://github.com/DenisStoicaa/FleetTrack/blob/f0bacd6888962960546b95324289ccb1a62914e1/ai-log/etapa-04.md) | read |
+| S4-R7 | commit "Stage 4" pushed                       | [f0bacd6](https://github.com/DenisStoicaa/FleetTrack/commit/f0bacd6888962960546b95324289ccb1a62914e1) | commit history |
