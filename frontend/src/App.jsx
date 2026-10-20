@@ -1,4 +1,5 @@
-// FleetTrack · Etapa 3: componenta principală
+// FleetTrack · Etapa 4: componenta principală
+import TirList from "./components/TirList.jsx";
 
 // Datele de test din README (mutate din Etapa 2); lista e fixă, deci stă deasupra funcției
 const tiruri = [
@@ -57,8 +58,7 @@ export default function App() {
             <h2>Flota mea</h2>
             <span className="count-pill">{tiruri.length} tiruri</span>
           </div>
-          {/* Temporar: date brute; cardurile apar în Etapa 4 */}
-          <pre>{JSON.stringify(tiruri, null, 2)}</pre>
+          <TirList tiruri={tiruri} />
         </section>
       </main>
 

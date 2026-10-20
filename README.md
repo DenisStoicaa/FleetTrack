@@ -39,6 +39,7 @@ The stage 1–2 static files (HTML mockup, CSS, `tiruri.js`) are kept in `mockup
 | Claude | stage 1: reading the stage guide, drafting the README, HTML structure and CSS (Grid, Flexbox, variables, dark theme) |
 | Claude | stage 2: reading the stage guide, writing `tiruri.js` (array of objects, map/filter/find/reduce, immutable functions, validation, console tests) |
 | Claude | stage 3: reading the stage guide, creating the Vite + React project, removing the demo files, writing `App.jsx` with the header computed from data |
+| Claude | stage 4: reading the stage guide, splitting the list into `TirList` and `TirCard`, rendering the cards from data with `map` and `key`, testing the special cases (missing key, empty list, state change) |
 
 Details per stage: see the [ai-log/](ai-log/) folder.
 
@@ -57,11 +58,23 @@ moved into the main component; the list is still printed raw.
 The header (counter and the four stat tiles) is computed from the `tiruri` array:
 total, in transit, arrived and international routes (category other than Domestic).
 
+## Stage 4: components
+
+The list is rendered from the data, through two components in `frontend/src/components/`:
+- `TirList` receives the whole `tiruri` array and renders one card per item (`map`, `key={tir.id}`);
+  when the array is empty it shows "Nu există niciun tir în flotă."
+- `TirCard` receives a single truck through props and displays it exactly like the stage 1 mockup:
+  EU-style plate, model, driver → destination, trailer badge, route category and status.
+  The trailer label comes from `ETICHETE_REMORCA` (`refrigerated` → "Frigorifică"),
+  and an arrived truck gets the `done` class and the "Sosit" status.
+
 ## Status
 
 - [x] Stage 1: static mockup
 - [x] Stage 2: data logic in JavaScript
 - [x] Stage 3: Vite and React project
+- [x] Stage 4: components rendered from data
+- [ ] Stage 5: local state and events
 
 ## Stage 1 checklist
 
