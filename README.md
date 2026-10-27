@@ -40,6 +40,7 @@ The stage 1–2 static files (HTML mockup, CSS, `tiruri.js`) are kept in `mockup
 | Claude | stage 2: reading the stage guide, writing `tiruri.js` (array of objects, map/filter/find/reduce, immutable functions, validation, console tests) |
 | Claude | stage 3: reading the stage guide, creating the Vite + React project, removing the demo files, writing `App.jsx` with the header computed from data |
 | Claude | stage 4: reading the stage guide, splitting the list into `TirList` and `TirCard`, rendering the cards from data with `map` and `key`, testing the special cases (missing key, empty list, state change) |
+| Claude | stage 5: reading the stage guide, moving the list into `useState`, the immutable `handleToggleSosit` / `handleDelete` functions passed down through props, the controlled checkbox and the delete button in `TirCard`, the light / dark toggle with `data-theme` |
 
 Details per stage: see the [ai-log/](ai-log/) folder.
 
@@ -68,13 +69,25 @@ The list is rendered from the data, through two components in `frontend/src/comp
   The trailer label comes from `ETICHETE_REMORCA` (`refrigerated` → "Frigorifică"),
   and an arrived truck gets the `done` class and the "Sosit" status.
 
+## Stage 5: local state and events
+
+The list lives in React state, in `App` (`useState(TIRURI_INITIALE)`).
+Checking a truck as arrived and deleting it work from the page: `TirCard` only calls
+`onToggle(id)` / `onDelete(id)`, and `App` changes the list with immutable updates
+(`map` with `{ ...t, arrived: !t.arrived }`, `filter`). The counter and the four stat tiles
+in the header are derived from the list on every render, so they follow automatically.
+A button in the header switches between light and dark mode: the choice is kept in state
+and written as `data-theme` on `<html>`; the CSS only redefines the color variables.
+Changes are lost on refresh, which is what stage 6 and stage 10 fix.
+
 ## Status
 
 - [x] Stage 1: static mockup
 - [x] Stage 2: data logic in JavaScript
 - [x] Stage 3: Vite and React project
 - [x] Stage 4: components rendered from data
-- [ ] Stage 5: local state and events
+- [x] Stage 5: local state and events
+- [ ] Stage 6: loading data from a mock API
 
 ## Stage 1 checklist
 

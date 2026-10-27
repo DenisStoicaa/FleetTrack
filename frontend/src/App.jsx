@@ -1,15 +1,42 @@
-// FleetTrack · Etapa 4: componenta principală
+// FleetTrack · Etapa 5: componenta principală, cu state local și evenimente
+import { useState } from "react";
 import TirList from "./components/TirList.jsx";
 
-// Datele de test din README (mutate din Etapa 2); lista e fixă, deci stă deasupra funcției
-const tiruri = [
+// Datele de test din README (doar valoarea inițială, folosită o singură dată, la prima randare)
+const TIRURI_INITIALE = [
   { id: 1, name: "B 101 FLT · Volvo FH16", arrived: false, trailerType: "refrigerated", category: "EU", driver: "Ion Popescu", destination: "Berlin" },
   { id: 2, name: "B 202 FLT · Scania R450", arrived: true, trailerType: "curtainsider", category: "Domestic", driver: "Maria Ionescu", destination: "Cluj-Napoca" },
   { id: 3, name: "CJ 303 FLT · DAF XF", arrived: false, trailerType: "tanker", category: "Non-EU", driver: "Andrei Georgescu", destination: "Istanbul" },
 ];
 
+// Tema de pornire: cea a sistemului de operare
+function temaInitiala() {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
 export default function App() {
-  // Valorile din antet, calculate din date (aceeași logică din Etapa 2)
+  const [tiruri, setTiruri] = useState(TIRURI_INITIALE);
+  const [tema, setTema] = useState(temaInitiala);
+
+  // Actualizare imutabilă: listă nouă, obiect nou doar pentru tirul schimbat
+  function handleToggleSosit(id) {
+    setTiruri((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, arrived: !t.arrived } : t))
+    );
+  }
+
+  function handleDelete(id) {
+    setTiruri((prev) => prev.filter((t) => t.id !== id));
+  }
+
+  // Comutarea temei: state-ul pentru buton, atributul data-theme pentru CSS
+  function handleTema() {
+    const noua = tema === "dark" ? "light" : "dark";
+    setTema(noua);
+    document.documentElement.dataset.theme = noua;
+  }
+
+  // Valori derivate: se recalculează din listă la fiecare randare, nu stau în state
   const inTranzit = tiruri.filter((t) => !t.arrived).length;
   const sosite = tiruri.length - inTranzit;
   const internationale = tiruri.filter((t) => t.category !== "Domestic").length;
@@ -17,6 +44,13 @@ export default function App() {
   return (
     <>
       <header className="app-header">
+        <button
+          className="theme-toggle"
+          onClick={handleTema}
+          aria-pressed={tema === "dark"}
+        >
+          {tema === "dark" ? "Mod luminos" : "Mod întunecat"}
+        </button>
         <div className="header-inner">
           <div className="brand">
             <span className="brand-mark" aria-hidden="true">
@@ -58,7 +92,11 @@ export default function App() {
             <h2>Flota mea</h2>
             <span className="count-pill">{tiruri.length} tiruri</span>
           </div>
-          <TirList tiruri={tiruri} />
+          <TirList
+            tiruri={tiruri}
+            onToggle={handleToggleSosit}
+            onDelete={handleDelete}
+          />
         </section>
       </main>
 

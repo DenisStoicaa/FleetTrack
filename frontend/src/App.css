@@ -49,6 +49,11 @@
   --done-num: #16a34a;
 
   --plate-blue: #1f4fbf;         /* EU strip on the plate */
+  --plate-border: #15171c;
+
+  /* delete button */
+  --danger: #dc2626;
+  --on-danger: #fff;
 
   /* one color for each trailer type (used on the icon only) */
   --refrigerated: #0284c7;
@@ -63,6 +68,21 @@
   --font-display: "Archivo", "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
 
+  /* Etapa 5: the per-theme differences, kept as variables so each theme
+     only redefines values (no component rules repeated per theme) */
+  --page-glow: radial-gradient(1200px 600px at 50% -200px, rgb(255 255 255 / 0.7), transparent 70%);
+  --brand-shadow: 0 0 0 6px var(--card), 0 14px 30px -6px var(--accent-glow);
+  --stat-blur: none;
+  --stat-transit-bg:
+    radial-gradient(120% 140% at 100% 0%, rgb(255 255 255 / 0.28), transparent 55%),
+    var(--accent);
+  --card-border: transparent;
+  --card-border-hover: transparent;
+  --card-done-border: var(--border);
+  --card-done-border-hover: var(--border-strong);
+  --pill-bg: var(--card);
+  --pill-border: var(--border);
+
   --radius-xl: 32px;   /* panels */
   --radius-lg: 24px;   /* cards, tiles */
   --radius: 14px;
@@ -72,9 +92,7 @@
 body {
   margin: 0;
   font-family: var(--font-display);
-  background:
-    radial-gradient(1200px 600px at 50% -200px, rgb(255 255 255 / 0.7), transparent 70%),
-    var(--bg);
+  background: var(--page-glow), var(--bg);
   background-attachment: fixed;
   color: var(--text);
   line-height: 1.5;
@@ -138,9 +156,7 @@ svg {
   background: var(--accent);
   color: var(--on-accent);
   font-size: 28px;
-  box-shadow:
-    0 0 0 6px var(--card),
-    0 14px 30px -6px var(--accent-glow);
+  box-shadow: var(--brand-shadow);
 }
 
 .brand-mark svg { stroke-width: 1.8; }
@@ -205,6 +221,7 @@ svg {
   border-radius: var(--radius-lg);
   background: var(--stat-bg);
   box-shadow: var(--shadow);
+  backdrop-filter: var(--stat-blur);
 }
 
 .stat dt {
@@ -226,9 +243,7 @@ svg {
 
 /* in transit = the live number, so it gets the accent tile */
 .stat-transit {
-  background:
-    radial-gradient(120% 140% at 100% 0%, rgb(255 255 255 / 0.28), transparent 55%),
-    var(--accent);
+  background: var(--stat-transit-bg);
   border-color: transparent;
   box-shadow: 0 16px 34px -12px var(--accent-glow);
 }
@@ -295,8 +310,8 @@ svg {
   font-weight: 500;
   padding: 6px 14px;
   border-radius: var(--pill);
-  background: var(--card);
-  border: 1px solid var(--border);
+  background: var(--pill-bg);
+  border: 1px solid var(--pill-border);
   color: var(--muted);
 }
 
@@ -388,7 +403,7 @@ svg {
   flex-wrap: wrap;
   gap: 14px 20px;
   padding: 20px 22px 20px 24px;
-  border: 1px solid transparent;
+  border: 1px solid var(--card-border);
   border-radius: var(--radius-lg);
   background: var(--card);
   box-shadow: var(--shadow-sm);
@@ -415,7 +430,7 @@ svg {
 }
 
 .item-body {
-  flex: 1 1 280px;
+  flex: 1;
   min-width: 0;
 }
 
@@ -443,7 +458,7 @@ svg {
   letter-spacing: 0.05em;
   background: #fff;
   color: #111;
-  border: 1.5px solid #15171c;
+  border: 1.5px solid var(--plate-border);
   border-radius: 7px;
   overflow: hidden;
   padding-right: 9px;
@@ -603,7 +618,7 @@ svg {
 .item-card.done {
   background: var(--card-soft);
   box-shadow: none;
-  border-color: var(--border);
+  border-color: var(--card-done-border);
 }
 
 .item-card.done::before {
@@ -652,11 +667,12 @@ svg {
 /* 5 Interactive states */
 .item-card:hover {
   box-shadow: var(--shadow-hover);
+  border-color: var(--card-border-hover);
   transform: translateY(-3px);
 }
 
 .item-card.done:hover {
-  border-color: var(--border-strong);
+  border-color: var(--card-done-border-hover);
 }
 
 .item-form input:hover,
@@ -687,9 +703,10 @@ svg {
   outline-offset: 3px;
 }
 
-/* 5 Dark theme (Fleet Status): mostly the variable values change */
+/* 5 Dark theme (Fleet Status): only the variable values change */
+/* System theme, unless the user explicitly picked the light one */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #0a0a0c;
     --bg-glow: rgb(255 106 19 / 0.38);
     --surface: #121215;
@@ -724,39 +741,151 @@ svg {
     --curtainsider: #a78bfa;
     --tanker: #f59e0b;
 
+    --danger: #f87171;
+    --on-danger: #0a0a0c;
+
     --shadow-sm: 0 1px 0 rgb(255 255 255 / 0.03) inset;
     --shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 20px 40px -20px rgb(0 0 0 / 0.6);
     --shadow-hover: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 24px 48px -16px rgb(0 0 0 / 0.8);
-  }
 
-  body { background: var(--bg); }
-
-  .brand-mark {
-    box-shadow:
-      0 0 0 6px rgb(255 255 255 / 0.05),
-      0 0 40px -4px var(--accent-glow);
-  }
-
-  .stat { backdrop-filter: blur(6px); }
-
-  .stat-transit {
-    background:
+    --page-glow: none;
+    --brand-shadow: 0 0 0 6px rgb(255 255 255 / 0.05), 0 0 40px -4px var(--accent-glow);
+    --stat-blur: blur(6px);
+    --stat-transit-bg:
       radial-gradient(120% 140% at 100% 0%, rgb(255 255 255 / 0.22), transparent 55%),
       linear-gradient(160deg, #ff7a2b, #e3550a);
+    --card-border: rgb(255 255 255 / 0.05);
+    --card-border-hover: rgb(255 106 19 / 0.35);
+    --card-done-border: rgb(255 255 255 / 0.04);
+    --card-done-border-hover: rgb(255 255 255 / 0.1);
+    --plate-border: #fff;
+    --pill-bg: var(--chip);
+    --pill-border: transparent;
   }
-
-  .item-card { border-color: rgb(255 255 255 / 0.05); }
-
-  .item-card:hover { border-color: rgb(255 106 19 / 0.35); }
-
-  .item-card.done { border-color: rgb(255 255 255 / 0.04); }
-
-  .item-card.done:hover { border-color: rgb(255 255 255 / 0.1); }
-
-  .plate { border-color: #fff; }
-
-  .count-pill { background: var(--chip); border-color: transparent; }
 }
+
+/* Etapa 5: the theme picked with the header button wins over the system one */
+:root[data-theme="dark"] {
+  --bg: #0a0a0c;
+  --bg-glow: rgb(255 106 19 / 0.38);
+  --surface: #121215;
+  --surface-border: rgb(255 255 255 / 0.06);
+  --card: #1a1a1e;
+  --card-soft: #151518;
+  --chip: #26262b;
+
+  --text: #f3f1ec;
+  --muted: #9b9ca4;
+  --faint: #6b6c74;
+
+  --border: #26262b;
+  --border-strong: #3a3a41;
+
+  --accent-dark: #ff8a45;
+  --accent-soft: rgb(255 106 19 / 0.16);
+  --accent-glow: rgb(255 106 19 / 0.45);
+
+  /* the orange glow that bleeds from the top, like the phone headers */
+  --header-bg:
+    radial-gradient(1000px 420px at 85% -30%, var(--bg-glow), transparent 65%),
+    linear-gradient(180deg, #17110d 0%, var(--bg) 100%);
+  --stat-bg: rgb(255 255 255 / 0.04);
+  --stat-border: rgb(255 255 255 / 0.07);
+
+  --done-soft: rgb(74 222 128 / 0.12);
+  --done-text: #86efac;
+  --done-num: #4ade80;
+
+  --refrigerated: #38bdf8;
+  --curtainsider: #a78bfa;
+  --tanker: #f59e0b;
+
+  --danger: #f87171;
+  --on-danger: #0a0a0c;
+
+  --shadow-sm: 0 1px 0 rgb(255 255 255 / 0.03) inset;
+  --shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 20px 40px -20px rgb(0 0 0 / 0.6);
+  --shadow-hover: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 24px 48px -16px rgb(0 0 0 / 0.8);
+
+  --page-glow: none;
+  --brand-shadow: 0 0 0 6px rgb(255 255 255 / 0.05), 0 0 40px -4px var(--accent-glow);
+  --stat-blur: blur(6px);
+  --stat-transit-bg:
+    radial-gradient(120% 140% at 100% 0%, rgb(255 255 255 / 0.22), transparent 55%),
+    linear-gradient(160deg, #ff7a2b, #e3550a);
+  --card-border: rgb(255 255 255 / 0.05);
+  --card-border-hover: rgb(255 106 19 / 0.35);
+  --card-done-border: rgb(255 255 255 / 0.04);
+  --card-done-border-hover: rgb(255 255 255 / 0.1);
+  --plate-border: #fff;
+  --pill-bg: var(--chip);
+  --pill-border: transparent;
+}
+
+/* Etapa 5: checkbox and delete button in the card */
+.item-main {
+  flex: 1 1 280px;
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  cursor: pointer;
+}
+
+.item-main input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin: 4px 0 0;
+  flex-shrink: 0;
+  accent-color: var(--done);
+  cursor: pointer;
+}
+
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.btn-danger {
+  border: 1px solid var(--danger);
+  background: transparent;
+  color: var(--danger);
+  border-radius: var(--pill);
+  padding: 9px 16px;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn-danger:hover {
+  background: var(--danger);
+  color: var(--on-danger);
+}
+
+/* Etapa 5: theme toggle button, in the corner of the header */
+.theme-toggle {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 1;
+  padding: 7px 14px;
+  border: 1px solid var(--stat-border);
+  border-radius: var(--pill);
+  background: var(--stat-bg);
+  color: var(--on-header);
+  box-shadow: var(--shadow-sm);
+  font: inherit;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.theme-toggle:hover { border-color: var(--accent); }
 
 /* Less motion for users who ask for it */
 @media (prefers-reduced-motion: reduce) {
@@ -779,7 +908,7 @@ svg {
   }
 
   .app-header {
-    padding: 32px 16px 36px;
+    padding: 64px 16px 36px;
   }
 
   .brand-mark {
@@ -814,4 +943,9 @@ svg {
   }
 
   .status { padding: 8px 14px 8px 12px; }
+
+  /* Etapa 5: the checkbox takes some width, so the route line may wrap */
+  .item-main { gap: 12px; }
+
+  .item-meta { flex-wrap: wrap; }
 }
