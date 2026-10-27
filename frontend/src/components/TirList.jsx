@@ -3,13 +3,18 @@
 import TirCard from "./TirCard.jsx";
 
 export default function TirList({ tiruri, onToggle, onDelete }) {
-  // Lista goală: return timpuriu cu mesaj explicit
+  // Lista goală: return timpuriu cu mesaj explicit și o fotografie cu rampele goale
   if (tiruri.length === 0) {
-    return <p className="empty">Nu există niciun tir în flotă.</p>;
+    return (
+      <div className="empty">
+        <img src="/photos/empty-loading-docks.jpg" alt="" />
+        <p>Nu există niciun tir în flotă.</p>
+      </div>
+    );
   }
 
   // key = id-ul tirului, pus pe componenta întoarsă direct din map;
-  // pozitie servește doar la întârzierea animației de intrare, ca în mockup
+  // pozitie servește doar la întârzierea animației de intrare
   return (
     <ul className="item-list">
       {tiruri.map((tir, pozitie) => (

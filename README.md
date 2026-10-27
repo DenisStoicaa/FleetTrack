@@ -80,6 +80,25 @@ A button in the header switches between light and dark mode: the choice is kept 
 and written as `data-theme` on `<html>`; the CSS only redefines the color variables.
 Changes are lost on refresh, which is what stage 6 and stage 10 fix.
 
+## UI redesign: "on the road"
+
+After stage 5 the interface was redesigned after a look at fleet-management designs on Dribbble:
+a dusk-highway photo hero with the KPI tiles on frosted glass, then one photo card per truck
+(photo by trailer type, plate and status on the photo, driver avatar with initials, destination,
+an "arrived" switch that is still the controlled checkbox, and the delete button).
+The data, the state and the functions are the same as in stage 5; the light / dark themes still only
+redefine CSS variables. Fonts: Bricolage Grotesque (headings), Figtree (text), JetBrains Mono (plates).
+
+Photos (free, [Unsplash License](https://unsplash.com/license)), in `frontend/public/photos/`:
+
+| File | Photographer |
+| ---- | ------------ |
+| `hero-highway-dusk.jpg` | [@josiahfarrow](https://unsplash.com/photos/semi-truck-on-highway-at-dusk-ucuOscdCaO4) |
+| `truck-refrigerated.jpg` | [@ishergraphy](https://unsplash.com/photos/a-white-semi-truck-driving-down-a-road-778IldZFCDk) |
+| `truck-curtainsider.jpg` | [@photogasan](https://unsplash.com/photos/white-truck-on-road-during-daytime-GBVDilE8yvI) |
+| `truck-tanker.jpg` | [@zemos](https://unsplash.com/photos/a-large-tanker-truck-parked-on-the-side-of-the-road-yXAFCxpaQcw) |
+| `empty-loading-docks.jpg` | [@themrjaxon](https://unsplash.com/photos/a-row-of-semi-trucks-parked-next-to-each-other-fP4OG67TVes) |
+
 ## Status
 
 - [x] Stage 1: static mockup

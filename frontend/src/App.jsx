@@ -1,4 +1,4 @@
-// FleetTrack · Etapa 5: componenta principală, cu state local și evenimente
+// FleetTrack · componenta principală: state local, evenimente și tema
 import { useState } from "react";
 import TirList from "./components/TirList.jsx";
 
@@ -44,52 +44,62 @@ export default function App() {
   return (
     <>
       <header className="app-header">
-        <button
-          className="theme-toggle"
-          onClick={handleTema}
-          aria-pressed={tema === "dark"}
-        >
-          {tema === "dark" ? "Mod luminos" : "Mod întunecat"}
-        </button>
-        <div className="header-inner">
+        <div className="hero-top">
           <div className="brand">
             <span className="brand-mark" aria-hidden="true">
               <svg viewBox="0 0 24 24"><path d="M2 6h12v10H2z" /><path d="M14 9h4l4 4v3h-8z" /><circle cx="6.5" cy="17.5" r="2" /><circle cx="17.5" cy="17.5" r="2" /></svg>
             </span>
-            <div>
-              <h1>FleetTrack</h1>
-              <p>Evidența tirurilor din flotă: remorcă, șofer, destinație și starea cursei.</p>
-            </div>
+            <span className="brand-tag">Dispecerat flotă</span>
           </div>
+          <button
+            className="theme-toggle"
+            onClick={handleTema}
+            aria-pressed={tema === "dark"}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              {tema === "dark"
+                ? <><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></>
+                : <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />}
+            </svg>
+            {tema === "dark" ? "Mod luminos" : "Mod întunecat"}
+          </button>
+        </div>
+
+        <div className="hero-copy">
+          <h1>FleetTrack</h1>
+          <p>Evidența tirurilor din flotă: remorcă, șofer, destinație și starea cursei.</p>
           <p className="app-count">
             {tiruri.length} tiruri, dintre care {inTranzit} în tranzit
           </p>
-
-          <dl className="stats">
-            <div className="stat">
-              <dt>Total flotă</dt>
-              <dd>{tiruri.length}</dd>
-            </div>
-            <div className="stat stat-transit">
-              <dt>În tranzit</dt>
-              <dd>{inTranzit}</dd>
-            </div>
-            <div className="stat stat-done">
-              <dt>Sosite</dt>
-              <dd>{sosite}</dd>
-            </div>
-            <div className="stat">
-              <dt>Curse internaționale</dt>
-              <dd>{internationale}</dd>
-            </div>
-          </dl>
         </div>
+
+        <dl className="stats">
+          <div className="stat">
+            <dt>Total flotă</dt>
+            <dd>{tiruri.length}</dd>
+          </div>
+          <div className="stat stat-transit">
+            <dt>În tranzit</dt>
+            <dd>{inTranzit}</dd>
+          </div>
+          <div className="stat stat-done">
+            <dt>Sosite</dt>
+            <dd>{sosite}</dd>
+          </div>
+          <div className="stat">
+            <dt>Curse internaționale</dt>
+            <dd>{internationale}</dd>
+          </div>
+        </dl>
       </header>
 
       <main className="container">
         <section className="panel">
           <div className="panel-head">
-            <h2>Flota mea</h2>
+            <div>
+              <h2>Flota mea</h2>
+              <p className="panel-hint">Bifează un tir când ajunge la destinație.</p>
+            </div>
             <span className="count-pill">{tiruri.length} tiruri</span>
           </div>
           <TirList
@@ -100,7 +110,12 @@ export default function App() {
         </section>
       </main>
 
-      <footer className="app-footer">FleetTrack · Proiect Tehnologii Web</footer>
+      <footer className="app-footer">
+        <span>FleetTrack · Proiect Tehnologii Web</span>
+        <span>
+          Fotografii: <a href="https://unsplash.com" target="_blank" rel="noreferrer">Unsplash</a>
+        </span>
+      </footer>
     </>
   );
 }

@@ -1,99 +1,205 @@
-/* FleetTrack UI · v2
-   Light mode: soft, airy, rounded surfaces (Delvora / Swift Haul references)
-   Dark mode: black UI with an orange glow (Fleet Status reference)
-   The hi-vis orange stays the single accent in both themes. */
+/* FleetTrack UI · v3 "on the road"
+   Friendly, photo-led dashboard: a big dusk-highway hero with the KPIs on glass,
+   then one photo card per truck. Hi-vis orange stays the single accent.
+   Every color lives in a variable; the dark theme only redefines variables. */
 
-/* 4.1 Color variables: every color is defined once, here */
 * { box-sizing: border-box; }
 
 :root {
   /* surfaces */
-  --bg: #f1efea;                 /* warm off-white */
-  --bg-glow: rgb(255 106 19 / 0.10);
-  --surface: rgb(255 255 255 / 0.55);   /* frosted panel */
-  --surface-border: rgb(255 255 255 / 0.9);
-  --card: #ffffff;
-  --card-soft: #f6f4f0;
-  --chip: #f1efeb;
+  --bg: #f4f1ec;                 /* warm paper */
+  --bg-glow: rgb(255 106 19 / 0.08);
+  --surface: #ffffff;
+  --surface-2: #faf8f4;
+  --chip: #f2eee8;
 
   /* text */
-  --text: #15171c;
-  --muted: #6c707a;
-  --faint: #a2a5ad;
+  --text: #1b1d22;
+  --muted: #6b6f78;
+  --faint: #a3a6ae;
 
   /* lines */
-  --border: #e8e5df;
-  --border-strong: #d6d2ca;
+  --border: #ebe6de;
+  --border-strong: #d9d2c8;
 
   /* accent: hi-vis orange */
   --accent: #ff6a13;
-  --accent-dark: #e85a05;
-  --accent-soft: #fff1e7;
-  --accent-glow: rgb(255 106 19 / 0.32);
-  --on-accent: #15171c;          /* dark text keeps contrast on orange */
+  --accent-strong: #e85a05;
+  --accent-soft: #fff0e5;
+  --accent-glow: rgb(255 106 19 / 0.35);
+  --on-accent: #1b1d22;          /* dark text keeps contrast on orange */
 
-  /* header (light mode: sits on the page, no dark band) */
-  --header-bg:
-    radial-gradient(900px 420px at 92% -20%, var(--bg-glow), transparent 65%),
-    radial-gradient(700px 360px at -10% 0%, rgb(255 255 255 / 0.8), transparent 60%);
-  --on-header: var(--text);
-  --on-header-muted: var(--muted);
-  --stat-bg: var(--card);
-  --stat-border: var(--surface-border);
+  /* hero: the photo always stays dark enough for white text */
+  --hero-photo: url("/photos/hero-highway-dusk.jpg");
+  --hero-overlay:
+    linear-gradient(180deg, rgb(20 12 6 / 0.25) 0%, rgb(20 12 6 / 0.3) 40%, rgb(20 12 6 / 0.82) 100%);
+  --on-hero: #ffffff;
+  --on-hero-muted: rgb(255 255 255 / 0.78);
+  --glass: rgb(255 255 255 / 0.86);
+  --glass-border: rgb(255 255 255 / 0.9);
+  --glass-text: #1b1d22;
+  --glass-muted: #6b6f78;
 
   /* status */
-  --transit: #ff6a13;
   --done: #16a34a;
-  --done-soft: #e6f5ec;
+  --done-soft: #e6f6ec;
   --done-text: #0f6a31;
   --done-num: #16a34a;
+  --danger: #dc2626;
+  --danger-soft: #fdeeee;
+  --on-danger: #ffffff;
 
   --plate-blue: #1f4fbf;         /* EU strip on the plate */
-  --plate-border: #15171c;
-
-  /* delete button */
-  --danger: #dc2626;
-  --on-danger: #fff;
 
   /* one color for each trailer type (used on the icon only) */
   --refrigerated: #0284c7;
   --curtainsider: #7c3aed;
   --tanker: #b45309;
 
-  /* depth */
-  --shadow-sm: 0 1px 2px rgb(40 30 15 / 0.04);
-  --shadow: 0 1px 2px rgb(40 30 15 / 0.04), 0 10px 30px -10px rgb(40 30 15 / 0.12);
-  --shadow-hover: 0 2px 6px rgb(40 30 15 / 0.06), 0 22px 44px -14px rgb(40 30 15 / 0.22);
+  /* photos, avatars, switch */
+  --photo-done: grayscale(0.85) brightness(1.05) contrast(0.9);
+  --avatar-bg-l: 90%;
+  --avatar-fg-l: 30%;
+  --switch-off: #d9d2c8;
+  --knob: #ffffff;
 
-  --font-display: "Archivo", "Segoe UI", sans-serif;
+  /* depth */
+  --shadow-sm: 0 1px 2px rgb(40 30 15 / 0.05);
+  --shadow: 0 1px 2px rgb(40 30 15 / 0.04), 0 14px 34px -14px rgb(40 30 15 / 0.16);
+  --shadow-hover: 0 2px 6px rgb(40 30 15 / 0.06), 0 30px 56px -20px rgb(40 30 15 / 0.28);
+
+  --font-display: "Bricolage Grotesque", "Segoe UI", sans-serif;
+  --font-body: "Figtree", "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
 
-  /* Etapa 5: the per-theme differences, kept as variables so each theme
-     only redefines values (no component rules repeated per theme) */
-  --page-glow: radial-gradient(1200px 600px at 50% -200px, rgb(255 255 255 / 0.7), transparent 70%);
-  --brand-shadow: 0 0 0 6px var(--card), 0 14px 30px -6px var(--accent-glow);
-  --stat-blur: none;
-  --stat-transit-bg:
-    radial-gradient(120% 140% at 100% 0%, rgb(255 255 255 / 0.28), transparent 55%),
-    var(--accent);
-  --card-border: transparent;
-  --card-border-hover: transparent;
-  --card-done-border: var(--border);
-  --card-done-border-hover: var(--border-strong);
-  --pill-bg: var(--card);
-  --pill-border: var(--border);
-
-  --radius-xl: 32px;   /* panels */
-  --radius-lg: 24px;   /* cards, tiles */
-  --radius: 14px;
+  --radius-xl: 36px;   /* hero */
+  --radius-lg: 28px;   /* cards */
+  --radius: 16px;      /* tiles inside cards */
   --pill: 999px;
+}
+
+/* Dark theme: system preference, unless the user explicitly picked the light one */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    /* surfaces */
+    --bg: #0c0d10;
+    --bg-glow: rgb(255 106 19 / 0.10);
+    --surface: #16171b;
+    --surface-2: #121317;
+    --chip: #23242a;
+
+    /* text */
+    --text: #f3f1ec;
+    --muted: #9d9fa7;
+    --faint: #66686f;
+
+    /* lines */
+    --border: #24252b;
+    --border-strong: #35373e;
+
+    /* accent */
+    --accent-strong: #ff8a45;
+    --accent-soft: rgb(255 106 19 / 0.15);
+    --accent-glow: rgb(255 106 19 / 0.45);
+
+    /* hero */
+    --hero-overlay:
+      linear-gradient(180deg, rgb(8 6 5 / 0.35) 0%, rgb(8 6 5 / 0.45) 40%, rgb(12 13 16 / 0.96) 100%);
+    --glass: rgb(22 23 27 / 0.7);
+    --glass-border: rgb(255 255 255 / 0.08);
+    --glass-text: #f3f1ec;
+    --glass-muted: #a7a9b0;
+
+    /* status */
+    --done: #22c55e;
+    --done-soft: rgb(74 222 128 / 0.14);
+    --done-text: #86efac;
+    --done-num: #4ade80;
+    --danger: #f87171;
+    --danger-soft: rgb(248 113 113 / 0.12);
+
+    /* trailer icons */
+    --refrigerated: #38bdf8;
+    --curtainsider: #a78bfa;
+    --tanker: #fbbf24;
+
+    /* photos, avatars, switch */
+    --photo-done: grayscale(0.85) brightness(0.65);
+    --avatar-bg-l: 26%;
+    --avatar-fg-l: 82%;
+    --switch-off: #3a3c44;
+    --knob: #f3f1ec;
+
+    /* depth */
+    --shadow-sm: 0 1px 0 rgb(255 255 255 / 0.03) inset;
+    --shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 20px 40px -24px rgb(0 0 0 / 0.7);
+    --shadow-hover: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 30px 60px -24px rgb(0 0 0 / 0.9);
+  }
+}
+
+/* The theme picked with the header button wins over the system one */
+:root[data-theme="dark"] {
+  /* surfaces */
+  --bg: #0c0d10;
+  --bg-glow: rgb(255 106 19 / 0.10);
+  --surface: #16171b;
+  --surface-2: #121317;
+  --chip: #23242a;
+
+  /* text */
+  --text: #f3f1ec;
+  --muted: #9d9fa7;
+  --faint: #66686f;
+
+  /* lines */
+  --border: #24252b;
+  --border-strong: #35373e;
+
+  /* accent */
+  --accent-strong: #ff8a45;
+  --accent-soft: rgb(255 106 19 / 0.15);
+  --accent-glow: rgb(255 106 19 / 0.45);
+
+  /* hero */
+  --hero-overlay:
+    linear-gradient(180deg, rgb(8 6 5 / 0.35) 0%, rgb(8 6 5 / 0.45) 40%, rgb(12 13 16 / 0.96) 100%);
+  --glass: rgb(22 23 27 / 0.7);
+  --glass-border: rgb(255 255 255 / 0.08);
+  --glass-text: #f3f1ec;
+  --glass-muted: #a7a9b0;
+
+  /* status */
+  --done: #22c55e;
+  --done-soft: rgb(74 222 128 / 0.14);
+  --done-text: #86efac;
+  --done-num: #4ade80;
+  --danger: #f87171;
+  --danger-soft: rgb(248 113 113 / 0.12);
+
+  /* trailer icons */
+  --refrigerated: #38bdf8;
+  --curtainsider: #a78bfa;
+  --tanker: #fbbf24;
+
+  /* photos, avatars, switch */
+  --photo-done: grayscale(0.85) brightness(0.65);
+  --avatar-bg-l: 26%;
+  --avatar-fg-l: 82%;
+  --switch-off: #3a3c44;
+  --knob: #f3f1ec;
+
+  /* depth */
+  --shadow-sm: 0 1px 0 rgb(255 255 255 / 0.03) inset;
+  --shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 20px 40px -24px rgb(0 0 0 / 0.7);
+  --shadow-hover: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 30px 60px -24px rgb(0 0 0 / 0.9);
 }
 
 body {
   margin: 0;
-  font-family: var(--font-display);
-  background: var(--page-glow), var(--bg);
-  background-attachment: fixed;
+  font-family: var(--font-body);
+  background:
+    radial-gradient(900px 500px at 100% 0%, var(--bg-glow), transparent 70%),
+    var(--bg);
   color: var(--text);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -110,360 +216,328 @@ svg {
   flex-shrink: 0;
 }
 
-/* 4.2 Header: big italic headline, round brand mark, KPI tiles */
+h1, h2, h3 { font-family: var(--font-display); }
+
+/* 1 Hero header: full-width photo card, title on the road, KPIs on glass */
 .app-header {
   position: relative;
-  background: var(--header-bg);
-  color: var(--on-header);
-  padding: 48px 16px 40px;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: min(1280px, calc(100% - 32px));
+  min-height: 520px;
+  margin: 16px auto 0;
+  padding: 24px 28px 28px;
+  border-radius: var(--radius-xl);
   overflow: hidden;
+  color: var(--on-hero);
+  background: #1a120c;
 }
 
-/* dashed route line under the header, slowly moving */
+/* the photo, slowly drifting (Ken Burns), with the gradient on top */
+.app-header::before,
 .app-header::after {
   content: "";
   position: absolute;
-  left: max(16px, calc((100% - 1120px) / 2));
-  right: max(16px, calc((100% - 1120px) / 2));
-  bottom: 14px;
-  height: 2px;
-  background: repeating-linear-gradient(90deg, var(--border-strong) 0 10px, transparent 10px 20px);
-  animation: drive 2.4s linear infinite;
+  inset: 0;
+  z-index: -1;
 }
 
-@keyframes drive {
-  to { background-position: -20px 0; }
+.app-header::before {
+  background: var(--hero-photo) center 62% / cover no-repeat;
+  animation: drift 26s ease-in-out infinite alternate;
 }
 
-.header-inner {
-  max-width: 1120px;
-  margin: 0 auto;
+.app-header::after {
+  background: var(--hero-overlay);
+}
+
+@keyframes drift {
+  from { transform: scale(1.02); }
+  to { transform: scale(1.1) translateX(-1.5%); }
+}
+
+.hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 12px;
 }
 
 .brand-mark {
   display: grid;
   place-items: center;
-  flex-shrink: 0;
-  width: 64px;
-  height: 64px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
   background: var(--accent);
   color: var(--on-accent);
-  font-size: 28px;
-  box-shadow: var(--brand-shadow);
+  font-size: 22px;
+  box-shadow: 0 0 0 5px rgb(255 255 255 / 0.18), 0 10px 26px -6px var(--accent-glow);
 }
 
-.brand-mark svg { stroke-width: 1.8; }
-
-.app-header h1 {
-  margin: 0;
-  font-size: clamp(2.2rem, 5vw, 3.2rem);
-  font-weight: 800;
-  font-style: italic;
-  font-stretch: 105%;
-  letter-spacing: -0.035em;
-  line-height: 1;
+.brand-tag {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--on-hero-muted);
 }
 
-.app-header p {
-  margin: 8px 0 0;
-  max-width: 52ch;
-  color: var(--on-header-muted);
-}
-
-/* the counter: a soft pill, like the "4h Away" chip */
-.app-header .app-count {
+/* theme toggle: a glass pill in the corner of the hero */
+.theme-toggle {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-top: 28px;
-  padding: 8px 16px 8px 12px;
+  padding: 9px 16px 9px 13px;
+  border: 1px solid rgb(255 255 255 / 0.35);
   border-radius: var(--pill);
-  background: var(--stat-bg);
-  border: 1px solid var(--stat-border);
-  box-shadow: var(--shadow-sm);
-  font-size: 0.9rem;
+  background: rgb(255 255 255 / 0.14);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--on-hero);
+  font: inherit;
+  font-size: 0.88rem;
   font-weight: 600;
-  color: var(--on-header);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
 }
 
-.app-header .app-count::before {
+.theme-toggle svg { font-size: 1.05rem; }
+
+.theme-toggle:hover {
+  background: rgb(255 255 255 / 0.24);
+  border-color: rgb(255 255 255 / 0.6);
+}
+
+.hero-copy {
+  margin-top: auto;
+  max-width: 640px;
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 0.92;
+  text-shadow: 0 6px 30px rgb(0 0 0 / 0.25);
+}
+
+.hero-copy p {
+  margin: 12px 0 0;
+  max-width: 46ch;
+  font-size: 1.08rem;
+  color: var(--on-hero-muted);
+  text-shadow: 0 1px 12px rgb(0 0 0 / 0.5);
+}
+
+/* the counter: a glass pill with a pulsing orange dot */
+.hero-copy .app-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 8px 16px 8px 12px;
+  border-radius: var(--pill);
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--glass-text);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.hero-copy .app-count::before {
   content: "";
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   background: var(--accent);
   box-shadow: 0 0 0 4px var(--accent-soft);
 }
 
-/* KPI tiles: the important numbers, large and first */
+/* KPI tiles on frosted glass, sitting on the photo */
 .stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-  margin: 16px 0 0;
+  gap: 12px;
+  margin: 0;
 }
 
 .stat {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 18px;
-  min-height: 118px;
-  padding: 18px 20px;
-  border: 1px solid var(--stat-border);
-  border-radius: var(--radius-lg);
-  background: var(--stat-bg);
-  box-shadow: var(--shadow);
-  backdrop-filter: var(--stat-blur);
+  gap: 14px;
+  min-height: 112px;
+  padding: 16px 18px;
+  border: 1px solid var(--glass-border);
+  border-radius: 22px;
+  background: var(--glass);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: var(--glass-text);
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
+.stat:nth-child(2) { animation-delay: 60ms; }
+.stat:nth-child(3) { animation-delay: 120ms; }
+.stat:nth-child(4) { animation-delay: 180ms; }
+
 .stat dt {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--on-header-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--glass-muted);
 }
 
 .stat dd {
   margin: 0;
+  font-family: var(--font-display);
   font-size: 2.6rem;
   font-weight: 800;
-  font-stretch: 110%;
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.04em;
   line-height: 0.9;
 }
 
-/* in transit = the live number, so it gets the accent tile */
+/* in transit = the live number, so it gets the orange tile */
 .stat-transit {
-  background: var(--stat-transit-bg);
+  background:
+    radial-gradient(120% 140% at 100% 0%, rgb(255 255 255 / 0.3), transparent 55%),
+    var(--accent);
   border-color: transparent;
-  box-shadow: 0 16px 34px -12px var(--accent-glow);
+  color: var(--on-accent);
+  box-shadow: 0 18px 36px -14px var(--accent-glow);
 }
 
-.stat-transit dt,
-.stat-transit dd { color: var(--on-accent); }
-
-.stat-transit dt { opacity: 0.75; }
+.stat-transit dt { color: var(--on-accent); opacity: 0.72; }
 
 .stat-done dd { color: var(--done-num); }
 
-/* 4.3 Two columns (Grid) */
+/* 2 Main area */
 .container {
-  max-width: 1152px;   /* 1120px of content + 16px gutters, aligned with the header */
-  margin: 8px auto 0;
-  padding: 0 16px;
-  display: grid;
-  /* Etapa 3: doar panoul cu date; a doua coloană revine în Etapa 7 */
-  grid-template-columns: 1fr;
-  gap: 24px;
-  align-items: start;
-  position: relative;
-}
-
-/* 4.4 Panels: frosted container holding white cards */
-.panel {
-  background: var(--surface);
-  border: 1px solid var(--surface-border);
-  border-radius: var(--radius-xl);
-  padding: 28px;
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-}
-
-.panel-form {
-  position: sticky;
-  top: 24px;
-}
-
-.panel h2 {
-  margin: 0;
-  font-size: 1.3rem;
-  font-weight: 700;
-  letter-spacing: -0.015em;
-}
-
-.panel-hint {
-  margin: 4px 0 20px;
-  color: var(--muted);
-  font-size: 0.9rem;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 40px 16px 0;
 }
 
 .panel-head {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-  margin: 0 4px 20px;
+  gap: 16px;
+  margin: 0 12px 22px;
 }
 
-.count-pill {
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 500;
-  padding: 6px 14px;
-  border-radius: var(--pill);
-  background: var(--pill-bg);
-  border: 1px solid var(--pill-border);
+.panel h2 {
+  margin: 0;
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.panel-hint {
+  margin: 6px 0 0;
   color: var(--muted);
 }
 
-/* 4.5 Form (Flexbox): pill fields like the search bars in the references */
-.item-form,
-.item-form label {
-  display: flex;
-  flex-direction: column;
-}
-
-.item-form {
-  gap: 18px;
-}
-
-.item-form label {
-  gap: 8px;
-  padding-left: 4px;
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.item-form input,
-.item-form select {
-  font: inherit;
-  font-size: 1rem;
-  font-weight: 400;
-  padding: 13px 20px;
-  margin-left: -4px;
+.count-pill {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: var(--pill);
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--pill);
-  background: var(--card);
-  color: var(--text);
-  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  color: var(--muted);
 }
 
-.item-form select {
-  appearance: none;
-  padding-right: 44px;
-  background-image:
-    linear-gradient(45deg, transparent 50%, var(--muted) 50%),
-    linear-gradient(135deg, var(--muted) 50%, transparent 50%);
-  background-position: calc(100% - 24px) 50%, calc(100% - 19px) 50%;
-  background-size: 5px 5px;
-  background-repeat: no-repeat;
-}
-
-.item-form input::placeholder {
-  color: var(--faint);
-}
-
-.item-form button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 6px;
-  font: inherit;
-  font-weight: 700;
-  padding: 15px 22px;
-  border: none;
-  border-radius: var(--pill);
-  background: var(--accent);
-  color: var(--on-accent);
-  cursor: pointer;
-  box-shadow: 0 12px 26px -10px var(--accent-glow);
-  transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
-}
-
-.item-form button svg {
-  font-size: 1.1em;
-  stroke-width: 2.5;
-}
-
-/* 4.6 List and cards (Flexbox) */
+/* 3 Cards: one photo card per truck, in a responsive grid */
 .item-list {
   list-style: none;
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  gap: 22px;
 }
 
 .item-card {
-  position: relative;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 14px 20px;
-  padding: 20px 22px 20px 24px;
-  border: 1px solid var(--card-border);
+  flex-direction: column;
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  background: var(--card);
-  box-shadow: var(--shadow-sm);
+  background: var(--surface);
+  box-shadow: var(--shadow);
   overflow: hidden;
-  transition: border-color 0.2s, box-shadow 0.25s, transform 0.25s;
-  animation: rise 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-  animation-delay: calc(var(--i, 0) * 80ms + 100ms);
-}
-
-/* status at a glance: a short rounded tab on the left edge */
-.item-card::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 22px;
-  bottom: 22px;
-  width: 4px;
-  border-radius: 0 4px 4px 0;
-  background: var(--transit);
+  transition: box-shadow 0.3s, transform 0.3s, border-color 0.3s;
+  animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 90ms + 150ms);
 }
 
 @keyframes rise {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(14px); }
 }
 
-.item-body {
-  flex: 1;
-  min-width: 0;
+.card-photo {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  margin: 8px 8px 0;
+  border-radius: 22px;
+  overflow: hidden;
+  background: var(--chip);
 }
 
-.item-title {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
+.card-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.4s;
 }
 
-.item-card h3 {
-  margin: 0;
-  font-size: 1.2rem;
-  font-weight: 700;
-  letter-spacing: -0.015em;
+/* a soft shade at the bottom so the plate stays readable on any photo */
+.card-photo::after {
+  content: "";
+  position: absolute;
+  inset: 45% 0 0;
+  background: linear-gradient(180deg, transparent, rgb(0 0 0 / 0.45));
+  pointer-events: none;
 }
 
-/* License plate, EU style */
+/* License plate, EU style, on the photo */
 .plate {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  z-index: 1;
   display: inline-flex;
   align-items: stretch;
   font-family: var(--font-mono);
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   background: #fff;
   color: #111;
-  border: 1.5px solid var(--plate-border);
+  border: 1.5px solid #15171c;
   border-radius: 7px;
   overflow: hidden;
   padding-right: 9px;
-  line-height: 1.75;
+  line-height: 1.8;
   white-space: nowrap;
+  box-shadow: 0 6px 16px -4px rgb(0 0 0 / 0.4);
 }
 
 .plate-eu {
@@ -477,102 +551,32 @@ svg {
   letter-spacing: 0;
 }
 
-/* driver ── • destination, drawn like the shipment timeline */
-.item-meta {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 12px 0 14px;
-  color: var(--muted);
-  font-size: 0.92rem;
-}
-
-.route-line {
-  position: relative;
-  flex: 0 1 96px;
-  min-width: 40px;
-  height: 0;
-  margin: 0 4px;
-  border-top: 2px dashed var(--border-strong);
-}
-
-/* origin: hollow ring */
-.route-line::before {
-  content: "";
-  position: absolute;
-  left: -6px;
-  top: -6px;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  border: 2px solid var(--faint);
-  background: var(--card);
-}
-
-/* destination: accent dot with a soft halo */
-.route-line::after {
-  content: "";
-  position: absolute;
-  right: -6px;
-  top: -6px;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 4px var(--accent-soft);
-}
-
-.driver,
-.dest {
-  white-space: nowrap;
-}
-
-.dest {
-  color: var(--text);
-  font-weight: 600;
-}
-
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.tag {
-  display: inline-flex;
-  align-items: center;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 500;
-  padding: 5px 12px;
-  border-radius: var(--pill);
-  background: var(--chip);
-  color: var(--muted);
-}
-
+/* status chip on the photo: orange + pulsing dot while driving */
 .status {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-  padding: 10px 18px 10px 16px;
+  gap: 8px;
+  padding: 6px 13px 6px 11px;
   border-radius: var(--pill);
-  font-size: 0.88rem;
+  font-size: 0.8rem;
   font-weight: 700;
   background: var(--accent);
   color: var(--on-accent);
-  box-shadow: 0 10px 22px -10px var(--accent-glow);
+  box-shadow: 0 8px 20px -8px var(--accent-glow);
 }
 
 .dot {
   position: relative;
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: currentColor;
 }
 
-/* pulsing ring: the truck is still moving */
 .dot::after {
   content: "";
   position: absolute;
@@ -586,27 +590,90 @@ svg {
   to { transform: scale(2.6); opacity: 0; }
 }
 
-.empty {
-  margin: 0;
-  padding: 40px 16px;
-  border: 2px dashed var(--border-strong);
-  border-radius: var(--radius-lg);
-  color: var(--muted);
-  text-align: center;
+.item-body {
+  flex: 1;
+  padding: 18px 20px 4px;
 }
 
-/* 4.7 Badges, one class per trailer type: neutral pill, colored icon */
-.badge {
+.item-card h3 {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* driver and destination, side by side */
+.item-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.item-meta > div {
+  min-width: 0;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+
+.item-meta dt {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--faint);
+}
+
+.item-meta dd {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0 0;
+  font-weight: 600;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.item-meta dd svg {
+  font-size: 1.1rem;
+  color: var(--accent);
+}
+
+/* driver avatar: initials on a soft color picked from the truck id */
+.avatar {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: 0.68rem;
+  font-weight: 700;
+  background: hsl(var(--hue, 30) 70% var(--avatar-bg-l));
+  color: hsl(var(--hue, 30) 55% var(--avatar-fg-l));
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.badge,
+.tag {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 5px 13px 5px 10px;
+  padding: 5px 12px;
   border-radius: var(--pill);
-  font-size: 0.78rem;
-  font-weight: 600;
   background: var(--chip);
-  color: var(--text);
+  font-size: 0.8rem;
+  font-weight: 600;
 }
+
+.badge { padding-left: 10px; }
 
 .badge svg { font-size: 0.95rem; }
 
@@ -614,278 +681,173 @@ svg {
 .badge-curtainsider svg { color: var(--curtainsider); }
 .badge-tanker svg { color: var(--tanker); }
 
-/* 4.8 Finished item: the truck has arrived */
-.item-card.done {
-  background: var(--card-soft);
-  box-shadow: none;
-  border-color: var(--card-done-border);
-}
-
-.item-card.done::before {
-  background: var(--done);
-}
-
-.item-card.done h3,
-.item-card.done .plate {
-  opacity: 0.55;
-}
-
-.item-card.done .route-line {
-  border-top-style: solid;
-  border-color: var(--done);
-}
-
-.item-card.done .route-line::before {
-  border-color: var(--done);
-  background: var(--card-soft);
-}
-
-.item-card.done .route-line::after {
-  background: var(--done);
-  box-shadow: 0 0 0 4px var(--done-soft);
-}
-
-.item-card.done .status {
-  background: var(--done-soft);
-  color: var(--done-text);
-  box-shadow: none;
-}
-
-.item-card.done .dot::after {
-  animation: none;
-}
-
-/* Footer */
-.app-footer {
-  text-align: center;
-  padding: 40px 16px 32px;
+.tag {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--faint);
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: var(--muted);
 }
 
-/* 5 Interactive states */
-.item-card:hover {
-  box-shadow: var(--shadow-hover);
-  border-color: var(--card-border-hover);
-  transform: translateY(-3px);
-}
-
-.item-card.done:hover {
-  border-color: var(--card-done-border-hover);
-}
-
-.item-form input:hover,
-.item-form select:hover {
-  border-color: var(--border-strong);
-}
-
-.item-form input:focus,
-.item-form select:focus {
-  outline: none;
-  border-color: var(--accent);
-  background: var(--card);
-  box-shadow: 0 0 0 4px rgb(255 106 19 / 0.18);
-}
-
-.item-form button:hover {
-  background: var(--accent-dark);
-  transform: translateY(-1px);
-  box-shadow: 0 16px 30px -10px var(--accent-glow);
-}
-
-.item-form button:active {
-  transform: translateY(0);
-}
-
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-}
-
-/* 5 Dark theme (Fleet Status): only the variable values change */
-/* System theme, unless the user explicitly picked the light one */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0a0a0c;
-    --bg-glow: rgb(255 106 19 / 0.38);
-    --surface: #121215;
-    --surface-border: rgb(255 255 255 / 0.06);
-    --card: #1a1a1e;
-    --card-soft: #151518;
-    --chip: #26262b;
-
-    --text: #f3f1ec;
-    --muted: #9b9ca4;
-    --faint: #6b6c74;
-
-    --border: #26262b;
-    --border-strong: #3a3a41;
-
-    --accent-dark: #ff8a45;
-    --accent-soft: rgb(255 106 19 / 0.16);
-    --accent-glow: rgb(255 106 19 / 0.45);
-
-    /* the orange glow that bleeds from the top, like the phone headers */
-    --header-bg:
-      radial-gradient(1000px 420px at 85% -30%, var(--bg-glow), transparent 65%),
-      linear-gradient(180deg, #17110d 0%, var(--bg) 100%);
-    --stat-bg: rgb(255 255 255 / 0.04);
-    --stat-border: rgb(255 255 255 / 0.07);
-
-    --done-soft: rgb(74 222 128 / 0.12);
-    --done-text: #86efac;
-    --done-num: #4ade80;
-
-    --refrigerated: #38bdf8;
-    --curtainsider: #a78bfa;
-    --tanker: #f59e0b;
-
-    --danger: #f87171;
-    --on-danger: #0a0a0c;
-
-    --shadow-sm: 0 1px 0 rgb(255 255 255 / 0.03) inset;
-    --shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 20px 40px -20px rgb(0 0 0 / 0.6);
-    --shadow-hover: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 24px 48px -16px rgb(0 0 0 / 0.8);
-
-    --page-glow: none;
-    --brand-shadow: 0 0 0 6px rgb(255 255 255 / 0.05), 0 0 40px -4px var(--accent-glow);
-    --stat-blur: blur(6px);
-    --stat-transit-bg:
-      radial-gradient(120% 140% at 100% 0%, rgb(255 255 255 / 0.22), transparent 55%),
-      linear-gradient(160deg, #ff7a2b, #e3550a);
-    --card-border: rgb(255 255 255 / 0.05);
-    --card-border-hover: rgb(255 106 19 / 0.35);
-    --card-done-border: rgb(255 255 255 / 0.04);
-    --card-done-border-hover: rgb(255 255 255 / 0.1);
-    --plate-border: #fff;
-    --pill-bg: var(--chip);
-    --pill-border: transparent;
-  }
-}
-
-/* Etapa 5: the theme picked with the header button wins over the system one */
-:root[data-theme="dark"] {
-  --bg: #0a0a0c;
-  --bg-glow: rgb(255 106 19 / 0.38);
-  --surface: #121215;
-  --surface-border: rgb(255 255 255 / 0.06);
-  --card: #1a1a1e;
-  --card-soft: #151518;
-  --chip: #26262b;
-
-  --text: #f3f1ec;
-  --muted: #9b9ca4;
-  --faint: #6b6c74;
-
-  --border: #26262b;
-  --border-strong: #3a3a41;
-
-  --accent-dark: #ff8a45;
-  --accent-soft: rgb(255 106 19 / 0.16);
-  --accent-glow: rgb(255 106 19 / 0.45);
-
-  /* the orange glow that bleeds from the top, like the phone headers */
-  --header-bg:
-    radial-gradient(1000px 420px at 85% -30%, var(--bg-glow), transparent 65%),
-    linear-gradient(180deg, #17110d 0%, var(--bg) 100%);
-  --stat-bg: rgb(255 255 255 / 0.04);
-  --stat-border: rgb(255 255 255 / 0.07);
-
-  --done-soft: rgb(74 222 128 / 0.12);
-  --done-text: #86efac;
-  --done-num: #4ade80;
-
-  --refrigerated: #38bdf8;
-  --curtainsider: #a78bfa;
-  --tanker: #f59e0b;
-
-  --danger: #f87171;
-  --on-danger: #0a0a0c;
-
-  --shadow-sm: 0 1px 0 rgb(255 255 255 / 0.03) inset;
-  --shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 20px 40px -20px rgb(0 0 0 / 0.6);
-  --shadow-hover: 0 1px 0 rgb(255 255 255 / 0.05) inset, 0 24px 48px -16px rgb(0 0 0 / 0.8);
-
-  --page-glow: none;
-  --brand-shadow: 0 0 0 6px rgb(255 255 255 / 0.05), 0 0 40px -4px var(--accent-glow);
-  --stat-blur: blur(6px);
-  --stat-transit-bg:
-    radial-gradient(120% 140% at 100% 0%, rgb(255 255 255 / 0.22), transparent 55%),
-    linear-gradient(160deg, #ff7a2b, #e3550a);
-  --card-border: rgb(255 255 255 / 0.05);
-  --card-border-hover: rgb(255 106 19 / 0.35);
-  --card-done-border: rgb(255 255 255 / 0.04);
-  --card-done-border-hover: rgb(255 255 255 / 0.1);
-  --plate-border: #fff;
-  --pill-bg: var(--chip);
-  --pill-border: transparent;
-}
-
-/* Etapa 5: checkbox and delete button in the card */
-.item-main {
-  flex: 1 1 280px;
-  min-width: 0;
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  cursor: pointer;
-}
-
-.item-main input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-  margin: 4px 0 0;
-  flex-shrink: 0;
-  accent-color: var(--done);
-  cursor: pointer;
-}
-
+/* 4 Card actions: the "arrived" switch and the delete button */
 .item-actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 16px 8px 8px;
+  padding: 10px 10px 10px 14px;
+  border-radius: 20px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+
+.item-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+}
+
+/* the checkbox, drawn as a switch (still a real, controlled checkbox) */
+.item-main input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
   flex-shrink: 0;
+  width: 46px;
+  height: 28px;
+  margin: 0;
+  border-radius: var(--pill);
+  background: var(--switch-off);
+  cursor: pointer;
+  transition: background 0.25s;
+}
+
+.item-main input[type="checkbox"]::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--knob);
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.2);
+  transition: transform 0.25s cubic-bezier(0.3, 0.7, 0.3, 1.3);
+}
+
+.item-main input[type="checkbox"]:checked {
+  background: var(--done);
+}
+
+.item-main input[type="checkbox"]:checked::before {
+  transform: translateX(18px);
 }
 
 .btn-danger {
-  border: 1px solid var(--danger);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1px solid transparent;
+  border-radius: var(--pill);
   background: transparent;
   color: var(--danger);
-  border-radius: var(--pill);
-  padding: 9px 16px;
   font: inherit;
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
+
+.btn-danger svg { font-size: 1rem; }
 
 .btn-danger:hover {
   background: var(--danger);
   color: var(--on-danger);
 }
 
-/* Etapa 5: theme toggle button, in the corner of the header */
-.theme-toggle {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  z-index: 1;
-  padding: 7px 14px;
-  border: 1px solid var(--stat-border);
-  border-radius: var(--pill);
-  background: var(--stat-bg);
-  color: var(--on-header);
-  box-shadow: var(--shadow-sm);
-  font: inherit;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  cursor: pointer;
-  transition: border-color 0.15s;
+/* 5 Arrived truck: grey photo, green status */
+.item-card.done .card-photo img {
+  filter: var(--photo-done);
 }
 
-.theme-toggle:hover { border-color: var(--accent); }
+.item-card.done .status {
+  background: var(--done-soft);
+  color: var(--done-text);
+  box-shadow: none;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.item-card.done .dot::after { animation: none; }
+
+.item-card.done h3 { color: var(--muted); }
+
+.item-card.done .item-actions {
+  background: var(--done-soft);
+  border-color: transparent;
+  color: var(--done-text);
+}
+
+/* 6 Empty list: the loading docks are empty too */
+.empty {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  padding: 28px 16px 40px;
+  border: 2px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+.empty img {
+  width: min(100%, 420px);
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: 22px;
+  filter: var(--photo-done);
+}
+
+.empty p {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+/* Footer */
+.app-footer {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  padding: 48px 16px 32px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--faint);
+}
+
+.app-footer a { color: inherit; }
+
+/* 7 Interactive states */
+.item-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--border-strong);
+}
+
+.item-card:hover .card-photo img {
+  transform: scale(1.05);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
 
 /* Less motion for users who ask for it */
 @media (prefers-reduced-motion: reduce) {
@@ -897,55 +859,44 @@ svg {
   }
 }
 
-/* 4.9 Narrow screens: one column (kept last so it overrides .container) */
+/* 8 Narrow screens */
 @media (max-width: 700px) {
-  .container {
-    grid-template-columns: 1fr;
-  }
-
-  .panel-form {
-    position: static;
-  }
-
   .app-header {
-    padding: 64px 16px 36px;
+    width: calc(100% - 16px);
+    min-height: 0;
+    margin: 8px 8px 0;
+    padding: 16px 16px 16px;
+    gap: 22px;
+    border-radius: 28px;
   }
 
-  .brand-mark {
-    width: 52px;
-    height: 52px;
-    font-size: 24px;
-    margin-left: 4px;
+  .hero-copy { margin-top: 64px; }
+
+  /* the photo is busier at this size, so the shade starts higher */
+  .app-header::after {
+    background: linear-gradient(180deg, rgb(20 12 6 / 0.35), rgb(20 12 6 / 0.6) 30%, rgb(20 12 6 / 0.85));
   }
+
+  .brand-tag { display: none; }
 
   .stats {
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    gap: 8px;
   }
 
   .stat {
-    min-height: 100px;
-    padding: 16px;
+    min-height: 96px;
+    padding: 14px;
+    border-radius: 18px;
   }
 
-  .stat dd { font-size: 2.2rem; }
+  .stat dd { font-size: 2.1rem; }
 
-  .panel {
-    padding: 16px;
-    border-radius: var(--radius-lg);
-  }
+  .container { padding: 28px 12px 0; }
 
-  .panel-head { margin: 4px 4px 16px; }
+  .panel-head { margin: 0 6px 16px; }
 
-  .item-card {
-    padding: 18px 18px 18px 20px;
-    border-radius: 20px;
-  }
+  .panel h2 { font-size: 1.6rem; }
 
-  .status { padding: 8px 14px 8px 12px; }
-
-  /* Etapa 5: the checkbox takes some width, so the route line may wrap */
-  .item-main { gap: 12px; }
-
-  .item-meta { flex-wrap: wrap; }
+  .item-body { padding: 16px 16px 4px; }
 }
