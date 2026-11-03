@@ -31,7 +31,7 @@ function initiale(nume) {
     .toUpperCase();
 }
 
-export default function TirCard({ tir, pozitie, onToggle, onDelete }) {
+export default function TirCard({ tir, pozitie, onToggle, onDelete, onSelect }) {
   // "B 101 FLT · Volvo FH16" -> numărul pe plăcuță, modelul în titlu
   const [numar, model] = tir.name.split(" · ");
 
@@ -39,6 +39,10 @@ export default function TirCard({ tir, pozitie, onToggle, onDelete }) {
     <li
       className={tir.arrived ? "item-card done" : "item-card"}
       style={{ "--i": pozitie, "--hue": (tir.id * 67 + 20) % 360 }}
+      // clic oriunde pe card deschide harta, mai puțin pe comutator și pe butoane
+      onClick={(e) => {
+        if (!e.target.closest(".item-actions, button")) onSelect(tir.id);
+      }}
     >
       <div className="card-photo">
         <img
@@ -50,6 +54,17 @@ export default function TirCard({ tir, pozitie, onToggle, onDelete }) {
           <span className="dot" aria-hidden="true"></span>
           {tir.arrived ? "Sosit" : "În tranzit"}
         </span>
+        {/* același lucru și din tastatură */}
+        <button
+          className="map-open"
+          onClick={() => onSelect(tir.id)}
+          aria-label={`Vezi traseul pentru ${numar} pe hartă`}
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z" /><path d="M9 4v14M15 6v14" />
+          </svg>
+          Traseu
+        </button>
         <span className="plate">
           <span className="plate-eu">RO</span>
           {numar}

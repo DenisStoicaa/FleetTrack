@@ -2,7 +2,7 @@
 // Primește lista și funcțiile din App și le transmite fiecărui card, fără să le modifice.
 import TirCard from "./TirCard.jsx";
 
-export default function TirList({ tiruri, onToggle, onDelete }) {
+export default function TirList({ tiruri, onToggle, onDelete, onSelect }) {
   // Lista goală: return timpuriu cu mesaj explicit și o fotografie cu rampele goale
   if (tiruri.length === 0) {
     return (
@@ -24,6 +24,7 @@ export default function TirList({ tiruri, onToggle, onDelete }) {
           pozitie={pozitie}
           onToggle={onToggle}
           onDelete={onDelete}
+          onSelect={onSelect}
         />
       ))}
     </ul>

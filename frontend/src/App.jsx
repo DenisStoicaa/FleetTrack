@@ -1,6 +1,7 @@
 // FleetTrack · componenta principală: state local, evenimente și tema
 import { useState } from "react";
 import TirList from "./components/TirList.jsx";
+import TirMap from "./components/TirMap.jsx";
 
 // Datele de test din README (doar valoarea inițială, folosită o singură dată, la prima randare)
 const TIRURI_INITIALE = [
@@ -17,6 +18,8 @@ function temaInitiala() {
 export default function App() {
   const [tiruri, setTiruri] = useState(TIRURI_INITIALE);
   const [tema, setTema] = useState(temaInitiala);
+  // tirul deschis pe hartă: doar id-ul, datele se iau mereu din listă
+  const [selectatId, setSelectatId] = useState(null);
 
   // Actualizare imutabilă: listă nouă, obiect nou doar pentru tirul schimbat
   function handleToggleSosit(id) {
@@ -39,6 +42,7 @@ export default function App() {
   // Valori derivate: se recalculează din listă la fiecare randare, nu stau în state
   const inTranzit = tiruri.filter((t) => !t.arrived).length;
   const sosite = tiruri.length - inTranzit;
+  const selectat = tiruri.find((t) => t.id === selectatId);
   const internationale = tiruri.filter((t) => t.category !== "Domestic").length;
 
   return (
@@ -98,7 +102,7 @@ export default function App() {
           <div className="panel-head">
             <div>
               <h2>Flota mea</h2>
-              <p className="panel-hint">Bifează un tir când ajunge la destinație.</p>
+              <p className="panel-hint">Bifează un tir când ajunge la destinație. Apasă pe un tir ca să-i vezi traseul pe hartă.</p>
             </div>
             <span className="count-pill">{tiruri.length} tiruri</span>
           </div>
@@ -106,9 +110,12 @@ export default function App() {
             tiruri={tiruri}
             onToggle={handleToggleSosit}
             onDelete={handleDelete}
+            onSelect={setSelectatId}
           />
         </section>
       </main>
+
+      {selectat && <TirMap tir={selectat} onClose={() => setSelectatId(null)} />}
 
       <footer className="app-footer">
         <span>FleetTrack · Proiect Tehnologii Web</span>
