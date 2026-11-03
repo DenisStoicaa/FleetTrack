@@ -1,0 +1,9 @@
+{
+  "tiruri": [
+    { "id": 1, "name": "B 101 FLT · Volvo FH16", "arrived": false, "trailerType": "refrigerated", "category": "EU", "driver": "Ion Popescu", "destination": "Berlin" },
+    { "id": 2, "name": "B 202 FLT · Scania R450", "arrived": true, "trailerType": "curtainsider", "category": "Domestic", "driver": "Maria Ionescu", "destination": "Cluj-Napoca" },
+    { "id": 3, "name": "CJ 303 FLT · DAF XF", "arrived": false, "trailerType": "tanker", "category": "Non-EU", "driver": "Andrei Georgescu", "destination": "Istanbul" },
+    { "id": 4, "name": "BV 404 FLT · Mercedes Actros", "arrived": false, "trailerType": "curtainsider", "category": "EU", "driver": "Elena Dumitrescu", "destination": "Viena" },
+    { "id": 5, "name": "TM 505 FLT · MAN TGX", "arrived": true, "trailerType": "refrigerated", "category": "Domestic", "driver": "Mihai Stan", "destination": "Constanța" }
+  ]
+}

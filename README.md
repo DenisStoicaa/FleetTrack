@@ -20,16 +20,22 @@ Sample data used across all stages:
 1. B 101 FLT · Volvo FH16, in transit, refrigerated (driver Ion Popescu, to Berlin)
 2. B 202 FLT · Scania R450, arrived, curtainsider (driver Maria Ionescu, to Cluj-Napoca)
 3. CJ 303 FLT · DAF XF, in transit, tanker (driver Andrei Georgescu, to Istanbul)
+4. BV 404 FLT · Mercedes Actros, in transit, curtainsider (driver Elena Dumitrescu, to Viena), added in stage 6
+5. TM 505 FLT · MAN TGX, arrived, refrigerated (driver Mihai Stan, to Constanța), added in stage 6
+
+From stage 6 the data lives in `frontend/db.json` and is served by json-server.
 
 ## How to run
 
 ```bash
 cd frontend
 npm install
-npm run dev
+npm run api    # terminal 1: mock API, http://localhost:3001
+npm run dev    # terminal 2: the app, http://localhost:5173
 ```
 
-Then open the address printed in the terminal (http://localhost:5173).
+Then open the address printed in the second terminal (http://localhost:5173).
+The API address is read from `VITE_API_URL` (see `frontend/.env.example`); the default is http://localhost:3001.
 The stage 1–2 static files (HTML mockup, CSS, `tiruri.js`) are kept in `mockup/`.
 
 ## AI usage
@@ -41,6 +47,7 @@ The stage 1–2 static files (HTML mockup, CSS, `tiruri.js`) are kept in `mockup
 | Claude | stage 3: reading the stage guide, creating the Vite + React project, removing the demo files, writing `App.jsx` with the header computed from data |
 | Claude | stage 4: reading the stage guide, splitting the list into `TirList` and `TirCard`, rendering the cards from data with `map` and `key`, testing the special cases (missing key, empty list, state change) |
 | Claude | stage 5: reading the stage guide, moving the list into `useState`, the immutable `handleToggleSosit` / `handleDelete` functions passed down through props, the controlled checkbox and the delete button in `TirCard`, the light / dark toggle with `data-theme` |
+| Claude | stage 6: reading the stage guide, `db.json` with five trucks, the `api` script with json-server 0.17.4, `api.js` with `fetchTiruri` and the URL from `VITE_API_URL`, loading the list with `useEffect` and the loading / error states, testing with the API stopped and with `--delay 4000` |
 
 Details per stage: see the [ai-log/](ai-log/) folder.
 
@@ -78,7 +85,25 @@ Checking a truck as arrived and deleting it work from the page: `TirCard` only c
 in the header are derived from the list on every render, so they follow automatically.
 A button in the header switches between light and dark mode: the choice is kept in state
 and written as `data-theme` on `<html>`; the CSS only redefines the color variables.
-Changes are lost on refresh, which is what stage 6 and stage 10 fix.
+Changes are lost on refresh; stage 6 loads the list from an API and stage 7 saves the changes there.
+
+## Stage 6: data from a mock API
+
+The list is served by json-server from `frontend/db.json` (key `tiruri`, route `/tiruri`).
+The app fetches it on load and shows a loading state and an error state.
+
+    npm run api    # terminal 1, http://localhost:3001
+    npm run dev    # terminal 2, http://localhost:5173
+
+- `src/api.js` is the only file that calls `fetch`; `fetchTiruri()` checks `res.ok`
+  and throws `Eroare server: <status>` otherwise. The address comes from `VITE_API_URL`,
+  documented in `.env.example`.
+- `App` starts with `useState([])` and loads the list in `useEffect(..., [])`,
+  with `loading` and `error` state and an `ignore` flag cleaned up when the component unmounts.
+- While waiting the panel shows "Se încarcă flota…"; when the API is down it shows
+  "Nu am putut încărca flota: … Rulează `npm run api`?" instead of an empty page.
+- json-server is pinned to 0.17.4 (1.x generates text ids and behaves differently).
+- Toggling and deleting still change only the local state and are lost on refresh; stage 7 saves them on the server.
 
 ## UI redesign: "on the road"
 
@@ -106,7 +131,8 @@ Photos (free, [Unsplash License](https://unsplash.com/license)), in `frontend/pu
 - [x] Stage 3: Vite and React project
 - [x] Stage 4: components rendered from data
 - [x] Stage 5: local state and events
-- [ ] Stage 6: loading data from a mock API
+- [x] Stage 6: data from a mock API
+- [ ] Stage 7: form and validation
 
 ## Stage 1 checklist
 

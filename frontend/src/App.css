@@ -48,6 +48,8 @@
   --danger: #dc2626;
   --danger-soft: #fdeeee;
   --on-danger: #ffffff;
+  --error-bg: #fdeeee;
+  --error-border: #f5c2c2;
 
   --plate-blue: #1f4fbf;         /* EU strip on the plate */
 
@@ -124,6 +126,8 @@
     --done-num: #4ade80;
     --danger: #f87171;
     --danger-soft: rgb(248 113 113 / 0.12);
+    --error-bg: #2a1416;
+    --error-border: #6b2a2e;
 
     /* trailer icons */
     --refrigerated: #38bdf8;
@@ -189,6 +193,8 @@
   --done-num: #4ade80;
   --danger: #f87171;
   --danger-soft: rgb(248 113 113 / 0.12);
+  --error-bg: #2a1416;
+  --error-border: #6b2a2e;
 
   /* trailer icons */
   --refrigerated: #38bdf8;
@@ -1252,4 +1258,24 @@ body:has(.map-dialog[open]) { overflow: hidden; }
   .map-head h2 { font-size: 1.35rem; }
   .map-stats { grid-template-columns: 1fr 1fr; }
   .map-stat-wide { grid-column: 1 / -1; }
+}
+
+/* Etapa 6: stări de încărcare și de eroare */
+.info {
+  color: var(--muted);
+  padding: 10px 2px;
+}
+
+.error {
+  color: var(--danger);
+  background: var(--error-bg);
+  border: 1px solid var(--error-border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+}
+
+.error code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  color: var(--text);
 }

@@ -1,14 +1,8 @@
-// FleetTrack · componenta principală: state local, evenimente și tema
-import { useState } from "react";
+// FleetTrack · componenta principală: date de la API, state local, evenimente și tema
+import { useEffect, useState } from "react";
 import TirList from "./components/TirList.jsx";
 import TirMap from "./components/TirMap.jsx";
-
-// Datele de test din README (doar valoarea inițială, folosită o singură dată, la prima randare)
-const TIRURI_INITIALE = [
-  { id: 1, name: "B 101 FLT · Volvo FH16", arrived: false, trailerType: "refrigerated", category: "EU", driver: "Ion Popescu", destination: "Berlin" },
-  { id: 2, name: "B 202 FLT · Scania R450", arrived: true, trailerType: "curtainsider", category: "Domestic", driver: "Maria Ionescu", destination: "Cluj-Napoca" },
-  { id: 3, name: "CJ 303 FLT · DAF XF", arrived: false, trailerType: "tanker", category: "Non-EU", driver: "Andrei Georgescu", destination: "Istanbul" },
-];
+import { fetchTiruri } from "./api.js";
 
 // Tema de pornire: cea a sistemului de operare
 function temaInitiala() {
@@ -16,10 +10,34 @@ function temaInitiala() {
 }
 
 export default function App() {
-  const [tiruri, setTiruri] = useState(TIRURI_INITIALE);
+  // Lista pornește goală: datele vin de la server (json-server, db.json)
+  const [tiruri, setTiruri] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [tema, setTema] = useState(temaInitiala);
   // tirul deschis pe hartă: doar id-ul, datele se iau mereu din listă
   const [selectatId, setSelectatId] = useState(null);
+
+  // Rulează o singură dată, după prima randare
+  useEffect(() => {
+    let ignore = false; // nu se setează state dacă componenta a dispărut între timp
+
+    async function load() {
+      try {
+        const data = await fetchTiruri();
+        if (!ignore) setTiruri(data);
+      } catch (err) {
+        if (!ignore) setError(err.message);
+      } finally {
+        if (!ignore) setLoading(false);
+      }
+    }
+
+    load();
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   // Actualizare imutabilă: listă nouă, obiect nou doar pentru tirul schimbat
   function handleToggleSosit(id) {
@@ -106,12 +124,21 @@ export default function App() {
             </div>
             <span className="count-pill">{tiruri.length} tiruri</span>
           </div>
-          <TirList
-            tiruri={tiruri}
-            onToggle={handleToggleSosit}
-            onDelete={handleDelete}
-            onSelect={setSelectatId}
-          />
+          {/* Cele trei stări ale încărcării: așteptare, eroare, succes */}
+          {loading && <p className="info">Se încarcă flota…</p>}
+          {error && (
+            <p className="error" role="alert">
+              Nu am putut încărca flota: {error}. Rulează <code>npm run api</code>?
+            </p>
+          )}
+          {!loading && !error && (
+            <TirList
+              tiruri={tiruri}
+              onToggle={handleToggleSosit}
+              onDelete={handleDelete}
+              onSelect={setSelectatId}
+            />
+          )}
         </section>
       </main>
 
