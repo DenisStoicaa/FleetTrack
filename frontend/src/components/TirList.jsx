@@ -8,7 +8,7 @@ export default function TirList({ tiruri, onToggle, onDelete, onSelect }) {
     return (
       <div className="empty">
         <img src="/photos/empty-loading-docks.jpg" alt="" />
-        <p>Nu există niciun tir în flotă.</p>
+        <p data-testid="empty">Nu există niciun tir în flotă.</p>
       </div>
     );
   }

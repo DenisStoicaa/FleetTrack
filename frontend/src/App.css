@@ -1279,3 +1279,111 @@ body:has(.map-dialog[open]) { overflow: hidden; }
   font-size: 0.9em;
   color: var(--text);
 }
+
+/* Etapa 7: formularul în stânga, lista în dreapta */
+.container {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.panel-form {
+  position: sticky;
+  top: 20px;
+  padding: 26px 22px 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.panel-form .panel-head { margin: 0 0 18px; }
+.panel-form h2 { font-size: 1.5rem; }
+
+.tir-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.tir-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.tir-form input,
+.tir-form select {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 400;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.tir-form input::placeholder { color: var(--faint); }
+
+.tir-form input:focus-visible,
+.tir-form select:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+/* câmpul greșit, marcat prin aria-invalid */
+.tir-form input[aria-invalid="true"] {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px var(--danger-soft);
+}
+
+.tir-form .error { margin: 0; font-size: 0.9rem; }
+
+.btn-primary {
+  margin-top: 4px;
+  padding: 12px 18px;
+  border: 0;
+  border-radius: var(--pill);
+  background: var(--accent);
+  color: var(--on-accent);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 12px 26px -12px var(--accent-glow);
+  transition: background 0.15s, transform 0.15s;
+}
+
+.btn-primary:hover:not(:disabled) { background: var(--accent-strong); }
+.btn-primary:active:not(:disabled) { transform: translateY(1px); }
+
+/* Etapa 7: buton dezactivat cât timp se trimite */
+.tir-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.panel > .error { margin: 0 12px 18px; }
+
+@media (max-width: 960px) {
+  .container { grid-template-columns: 1fr; }
+  .panel-form { position: static; }
+}
+
+@media (max-width: 700px) {
+  .panel-form { padding: 20px 16px; }
+  .form-row { grid-template-columns: 1fr; }
+}

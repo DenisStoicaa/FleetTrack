@@ -102,7 +102,7 @@ export default function TirMap({ tir, onClose }) {
 
   const inchide = () => dialogRef.current.close();
 
-  const [numar, model] = tir.name.split(" · ");
+  const [numar, model] = tir.name.includes(" · ") ? tir.name.split(" · ") : [tir.name, ""];
   const traseu = TRASEE[tir.id];
 
   return (
@@ -126,7 +126,7 @@ export default function TirMap({ tir, onClose }) {
                 {tir.arrived ? "Sosit" : "În tranzit"}
               </span>
             </p>
-            <h2 id="map-title">{model}</h2>
+            <h2 id="map-title">{model || tir.name}</h2>
             <p className="map-sub">
               {tir.driver} · {traseu ? `${traseu.opriri[0]} → ${tir.destination}` : tir.destination}
             </p>

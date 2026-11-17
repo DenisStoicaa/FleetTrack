@@ -48,6 +48,7 @@ The stage 1–2 static files (HTML mockup, CSS, `tiruri.js`) are kept in `mockup
 | Claude | stage 4: reading the stage guide, splitting the list into `TirList` and `TirCard`, rendering the cards from data with `map` and `key`, testing the special cases (missing key, empty list, state change) |
 | Claude | stage 5: reading the stage guide, moving the list into `useState`, the immutable `handleToggleSosit` / `handleDelete` functions passed down through props, the controlled checkbox and the delete button in `TirCard`, the light / dark toggle with `data-theme` |
 | Claude | stage 6: reading the stage guide, `db.json` with five trucks, the `api` script with json-server 0.17.4, `api.js` with `fetchTiruri` and the URL from `VITE_API_URL`, loading the list with `useEffect` and the loading / error states, testing with the API stopped and with `--delay 4000` |
+| Claude | stage 7: reading the stage guide, the shared `request` function and the CRUD functions in `api.js`, the controlled `TirForm` with validation, saving add / toggle / delete on the server, `tw.json` and the `data-testid` attributes, testing with the API stopped and with `--delay` |
 
 Details per stage: see the [ai-log/](ai-log/) folder.
 
@@ -105,6 +106,29 @@ The app fetches it on load and shows a loading state and an error state.
 - json-server is pinned to 0.17.4 (1.x generates text ids and behaves differently).
 - Toggling and deleting still change only the local state and are lost on refresh; stage 7 saves them on the server.
 
+## Stage 7: form and validation
+
+Trucks can be added from the page. The form is controlled and validated,
+and every change (add, toggle, delete) goes to the API before it shows up
+in the list, so everything survives a page refresh.
+
+- `src/api.js` has one shared `request(path, options)` that sends JSON, checks `res.ok`
+  and handles `204 No Content`; on top of it `fetchTiruri`, `createTir` (POST),
+  `updateTir` (PATCH, only the changed fields) and `deleteTir` (DELETE).
+- `src/components/TirForm.jsx` is a controlled form (every field has `value` + `onChange`):
+  plate and model, trailer type, route category, driver and destination.
+  Validation, shown under the fields (not with `alert`), with the wrong field marked by `aria-invalid`:
+  name required and at most 100 characters; driver required, at most 50 characters,
+  letters only; destination required, at most 50 characters. An invalid form sends nothing.
+- While saving, the button is disabled and reads "Se salvează..."; the form is cleared only
+  after the server confirms. If the API is down the error appears in the form and the typed text stays.
+- `App` adds to the list the object returned by the server (with its id), and replaces the toggled
+  truck with the server's copy. A failed toggle or delete shows an error above the list, which stays visible.
+- Layout: the form on the left, the fleet on the right (one column under 960px).
+- `tw.json` (repository root) and the `data-testid` attributes (`form`, `form-title`, `form-trailerType`,
+  `form-category`, `form-driver`, `form-destination`, `form-submit`, `form-error`, `item` with `data-id`,
+  `item-title`, `item-toggle`, `item-delete`, `empty`, `loading`, `error`) are for the automatic check.
+
 ## UI redesign: "on the road"
 
 After stage 5 the interface was redesigned after a look at fleet-management designs on Dribbble:
@@ -132,7 +156,8 @@ Photos (free, [Unsplash License](https://unsplash.com/license)), in `frontend/pu
 - [x] Stage 4: components rendered from data
 - [x] Stage 5: local state and events
 - [x] Stage 6: data from a mock API
-- [ ] Stage 7: form and validation
+- [x] Stage 7: form and validation
+- [ ] Stage 8: routing and detail page
 
 ## Stage 1 checklist
 

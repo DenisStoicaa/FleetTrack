@@ -1,0 +1,11 @@
+{
+  "resource": "tiruri",
+  "title": "name",
+  "done": "arrived",
+  "sample": {
+    "trailerType": "tanker",
+    "category": "EU",
+    "driver": "Ana Marinescu",
+    "destination": "Budapesta"
+  }
+}

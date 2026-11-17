@@ -32,13 +32,16 @@ function initiale(nume) {
 }
 
 export default function TirCard({ tir, pozitie, onToggle, onDelete, onSelect }) {
-  // "B 101 FLT · Volvo FH16" -> numărul pe plăcuță, modelul în titlu
-  const [numar, model] = tir.name.split(" · ");
+  // "B 101 FLT · Volvo FH16" -> numărul pe plăcuță, modelul în titlu.
+  // Un nume fără " · " (scris altfel în formular) rămâne întreg în titlu.
+  const [numar, model] = tir.name.includes(" · ") ? tir.name.split(" · ") : [tir.name, ""];
 
   return (
     <li
       className={tir.arrived ? "item-card done" : "item-card"}
-      style={{ "--i": pozitie, "--hue": (tir.id * 67 + 20) % 360 }}
+      style={{ "--i": pozitie, "--hue": (Number(tir.id) * 67 + 20) % 360 }}
+      data-testid="item"
+      data-id={tir.id}
       // clic oriunde pe card deschide harta, mai puțin pe comutator și pe butoane
       onClick={(e) => {
         if (!e.target.closest(".item-actions, button")) onSelect(tir.id);
@@ -72,7 +75,17 @@ export default function TirCard({ tir, pozitie, onToggle, onDelete, onSelect }) 
       </div>
 
       <div className="item-body">
-        <h3>{model}</h3>
+        {/* textul complet al titlului este tir.name; numărul e deja pe plăcuță, deci se ascunde vizual */}
+        <h3 data-testid="item-title">
+          {model ? (
+            <>
+              <span className="visually-hidden">{numar} · </span>
+              {model}
+            </>
+          ) : (
+            tir.name
+          )}
+        </h3>
 
         <dl className="item-meta">
           <div>
@@ -112,6 +125,7 @@ export default function TirCard({ tir, pozitie, onToggle, onDelete, onSelect }) 
             type="checkbox"
             checked={tir.arrived}
             onChange={() => onToggle(tir.id)}
+            data-testid="item-toggle"
             aria-label={`${numar}: sosit la destinație`}
           />
           <span>Sosit la destinație</span>
@@ -120,6 +134,7 @@ export default function TirCard({ tir, pozitie, onToggle, onDelete, onSelect }) 
           className="btn-danger"
           onClick={() => onDelete(tir.id)}
           aria-label={`Șterge ${numar}`}
+          data-testid="item-delete"
         >
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" />
