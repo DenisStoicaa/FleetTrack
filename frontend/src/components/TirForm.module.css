@@ -8,87 +8,60 @@
 /* lățimea panoului decide aranjarea (container query), nu lățimea ecranului */
 :global(.panel):has(> .form) { container-type: inline-size; }
 
-/* previzualizarea tirului, actualizată la fiecare tastă */
+/* previzualizarea tirului, actualizată la fiecare tastă: miniatură + model + număr */
 .preview {
-  position: relative;
-  flex-shrink: 0;
-  height: 96px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border: 1px solid var(--border);
   border-radius: var(--radius);
-  overflow: hidden;
-  background: #111;
+  background: var(--surface-2);
 }
 
 .preview img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  flex-shrink: 0;
+  width: 64px;
+  height: 48px;
+  border-radius: 8px;
   object-fit: cover;
-  opacity: 0.55;
-  animation: fadeIn 0.5s ease;
+  animation: fadeIn 0.4s ease;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: scale(1.06); }
+  from { opacity: 0; }
 }
 
-.previewBody {
-  position: absolute;
-  inset: 0;
+.previewText {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-end;
-  gap: 4px;
-  padding: 12px 14px;
-  background: linear-gradient(180deg, transparent 10%, rgb(0 0 0 / 0.75));
-  color: #fff;
+  min-width: 0;
 }
 
-.previewBody strong {
-  margin-top: 4px;
+.previewText strong,
+.previewText > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.previewText strong {
   font-family: var(--font-display);
   font-stretch: 112%;
-  font-size: 1.05rem;
+  font-size: 0.98rem;
   font-weight: 800;
-  line-height: 1.1;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.25;
 }
 
-.previewMeta {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  max-width: 100%;
+.previewText > span {
   font-size: 0.8rem;
-  color: rgb(255 255 255 / 0.85);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  color: var(--muted);
 }
 
-.previewMeta :global(.avatar) {
-  width: 20px;
-  height: 20px;
-  border-radius: 6px;
-  font-size: 0.56rem;
-  --hue: 24;
-}
-
-.previewTags {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  padding: 3px 9px;
-  border-radius: var(--pill);
-  background: rgb(0 0 0 / 0.5);
-  backdrop-filter: blur(6px);
+.previewPlate {
   font-family: var(--font-mono);
-  font-size: 0.66rem;
-  color: rgb(255 255 255 / 0.85);
+  font-weight: 600;
+  color: var(--text);
 }
 
 .form label {
@@ -199,7 +172,13 @@
     gap: 12px 14px;
     align-items: start;
   }
-  .preview { grid-row: 1 / span 3; height: 100%; min-height: 180px; }
+  .preview {
+    grid-row: 1 / span 3;
+    flex-direction: column;
+    align-items: stretch;
+    height: 100%;
+  }
+  .preview img { width: 100%; height: auto; flex: 1; min-height: 100px; }
   .form > label:first-of-type { grid-column: 2 / -1; }
   .row { grid-column: 2 / -1; }
   .form > :global(.error),

@@ -4,7 +4,7 @@
 // previzualizare arată tirul așa cum va apărea în flotă, pe măsură ce se scrie.
 import { useState } from "react";
 import { CATEGORII, ETICHETE_REMORCA, FOTO_REMORCA, REMORCI } from "../constants.js";
-import { initiale, numarSiModel } from "../format.js";
+import { numarSiModel } from "../format.js";
 import styles from "./TirForm.module.css";
 
 const NUME_MAX = 100;
@@ -87,18 +87,12 @@ export default function TirForm({ onAdd }) {
       {/* previzualizarea: doar pentru ochi, cititoarele de ecran citesc câmpurile */}
       <div className={styles.preview} aria-hidden="true">
         <img key={valori.trailerType} src={FOTO_REMORCA[valori.trailerType]} alt="" />
-        <div className={styles.previewBody}>
-          <span className="plate">
-            <span className="plate-eu">RO</span>
-            {numarPrev || "B 000 FLT"}
-          </span>
+        <div className={styles.previewText}>
           <strong>{modelPrev || "Model camion"}</strong>
-          <span className={styles.previewMeta}>
-            <span className="avatar">{initiale(valori.driver.trim() || "?")}</span>
-            {valori.driver.trim() || "Șofer"} → {valori.destination.trim() || "Destinație"}
-          </span>
-          <span className={styles.previewTags}>
-            {ETICHETE_REMORCA[valori.trailerType]} · {valori.category}
+          <span>
+            <span className={styles.previewPlate}>{numarPrev || "B 000 FLT"}</span>
+            {" · "}
+            {ETICHETE_REMORCA[valori.trailerType]}
           </span>
         </div>
       </div>
