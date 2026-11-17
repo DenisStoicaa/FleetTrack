@@ -1,65 +1,37 @@
-// Un singur tir din listă, primit prin props, împreună cu funcțiile din App.
-
-// Valoarea din date -> textul afișat pe ecran
-const ETICHETE_REMORCA = {
-  refrigerated: "Frigorifică",
-  curtainsider: "Prelată",
-  tanker: "Cisternă",
-};
-
-// Iconița din badge, pentru fiecare tip de remorcă
-const ICONITE_REMORCA = {
-  refrigerated: "M12 2v20M4.9 4.9l14.2 14.2M2 12h20M4.9 19.1L19.1 4.9",
-  curtainsider: "M3 5h18M3 12h18M3 19h18",
-  tanker: "M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z",
-};
-
-// Fotografia de pe card, după tipul remorcii (din frontend/public/photos, sursa: Unsplash)
-const FOTO_REMORCA = {
-  refrigerated: "/photos/truck-refrigerated.jpg",
-  curtainsider: "/photos/truck-curtainsider.jpg",
-  tanker: "/photos/truck-tanker.jpg",
-};
-
-// "Ion Popescu" -> "IP", pentru avatarul șoferului
-function initiale(nume) {
-  return nume
-    .split(" ")
-    .map((parte) => parte[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
+// Un singur tir din listă, primit prin props, împreună cu funcțiile din pagina cu lista.
+// Titlul este link către pagina de detaliu; restul cardului deschide harta traseului.
+import { Link } from "react-router-dom";
+import { ETICHETE_REMORCA, FOTO_REMORCA, ICONITE_REMORCA } from "../constants.js";
+import { initiale, numarSiModel, nuanta } from "../format.js";
+import styles from "./TirCard.module.css";
 
 export default function TirCard({ tir, pozitie, onToggle, onDelete, onSelect }) {
-  // "B 101 FLT · Volvo FH16" -> numărul pe plăcuță, modelul în titlu.
-  // Un nume fără " · " (scris altfel în formular) rămâne întreg în titlu.
-  const [numar, model] = tir.name.includes(" · ") ? tir.name.split(" · ") : [tir.name, ""];
+  const [numar, model] = numarSiModel(tir.name);
 
   return (
     <li
-      className={tir.arrived ? "item-card done" : "item-card"}
-      style={{ "--i": pozitie, "--hue": (Number(tir.id) * 67 + 20) % 360 }}
+      className={tir.arrived ? `${styles.card} ${styles.done}` : styles.card}
+      style={{ "--i": pozitie, "--hue": nuanta(tir.id) }}
       data-testid="item"
       data-id={tir.id}
-      // clic oriunde pe card deschide harta, mai puțin pe comutator și pe butoane
+      // clic oriunde pe card deschide harta, mai puțin pe link, pe comutator și pe butoane
       onClick={(e) => {
-        if (!e.target.closest(".item-actions, button")) onSelect(tir.id);
+        if (!e.target.closest(`a, button, .${styles.actions}`)) onSelect(tir.id);
       }}
     >
-      <div className="card-photo">
+      <div className={styles.photo}>
         <img
           src={FOTO_REMORCA[tir.trailerType]}
           alt={`Camion cu remorcă ${ETICHETE_REMORCA[tir.trailerType].toLowerCase()}`}
           loading="lazy"
         />
-        <span className="status">
+        <span className={tir.arrived ? "status done" : "status"}>
           <span className="dot" aria-hidden="true"></span>
           {tir.arrived ? "Sosit" : "În tranzit"}
         </span>
         {/* același lucru și din tastatură */}
         <button
-          className="map-open"
+          className={styles.mapOpen}
           onClick={() => onSelect(tir.id)}
           aria-label={`Vezi traseul pentru ${numar} pe hartă`}
         >
@@ -74,20 +46,23 @@ export default function TirCard({ tir, pozitie, onToggle, onDelete, onSelect }) 
         </span>
       </div>
 
-      <div className="item-body">
-        {/* textul complet al titlului este tir.name; numărul e deja pe plăcuță, deci se ascunde vizual */}
-        <h3 data-testid="item-title">
-          {model ? (
-            <>
-              <span className="visually-hidden">{numar} · </span>
-              {model}
-            </>
-          ) : (
-            tir.name
-          )}
+      <div className={styles.body}>
+        {/* titlul duce la /tiruri/:id; textul complet al linkului este tir.name,
+            numărul e deja pe plăcuță, deci se ascunde vizual */}
+        <h3 className={styles.title}>
+          <Link to={`/tiruri/${tir.id}`} className={styles.titleLink} data-testid="item-link">
+            {model ? (
+              <>
+                <span className="visually-hidden">{numar} · </span>
+                {model}
+              </>
+            ) : (
+              tir.name
+            )}
+          </Link>
         </h3>
 
-        <dl className="item-meta">
+        <dl className={styles.meta}>
           <div>
             <dt>Șofer</dt>
             <dd>
@@ -107,7 +82,7 @@ export default function TirCard({ tir, pozitie, onToggle, onDelete, onSelect }) 
           </div>
         </dl>
 
-        <div className="tags">
+        <div className={styles.tags}>
           <span className={`badge badge-${tir.trailerType}`}>
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d={ICONITE_REMORCA[tir.trailerType]} />
@@ -118,9 +93,9 @@ export default function TirCard({ tir, pozitie, onToggle, onDelete, onSelect }) 
         </div>
       </div>
 
-      <div className="item-actions">
+      <div className={styles.actions}>
         {/* checkbox controlat, cu textul în același label: clic pe text = bifare */}
-        <label className="item-main">
+        <label className={styles.switch}>
           <input
             type="checkbox"
             checked={tir.arrived}

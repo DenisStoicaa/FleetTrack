@@ -49,6 +49,7 @@ The stage 1–2 static files (HTML mockup, CSS, `tiruri.js`) are kept in `mockup
 | Claude | stage 5: reading the stage guide, moving the list into `useState`, the immutable `handleToggleSosit` / `handleDelete` functions passed down through props, the controlled checkbox and the delete button in `TirCard`, the light / dark toggle with `data-theme` |
 | Claude | stage 6: reading the stage guide, `db.json` with five trucks, the `api` script with json-server 0.17.4, `api.js` with `fetchTiruri` and the URL from `VITE_API_URL`, loading the list with `useEffect` and the loading / error states, testing with the API stopped and with `--delay 4000` |
 | Claude | stage 7: reading the stage guide, the shared `request` function and the CRUD functions in `api.js`, the controlled `TirForm` with validation, saving add / toggle / delete on the server, `tw.json` and the `data-testid` attributes, testing with the API stopped and with `--delay` |
+| Claude | stage 8: reading the stage guide, React Router (`BrowserRouter`, the route map, `Layout` with `NavLink` and `Outlet`), the detail page with `useParams` and `fetchTir`, the about and 404 pages, splitting `App.css` into `index.css` and CSS Modules, testing the routes and the `data-testid` attributes |
 
 Details per stage: see the [ai-log/](ai-log/) folder.
 
@@ -129,6 +130,34 @@ in the list, so everything survives a page refresh.
   `form-category`, `form-driver`, `form-destination`, `form-submit`, `form-error`, `item` with `data-id`,
   `item-title`, `item-toggle`, `item-delete`, `empty`, `loading`, `error`) are for the automatic check.
 
+## Stage 8: routing and detail page
+
+The app now has several pages behind React Router, and the component styles
+moved next to their components, in CSS Modules.
+
+- `src/main.jsx` wraps `App` in `BrowserRouter`; `src/App.jsx` is only the route map:
+  `/` (the fleet), `/tiruri/:id` (one truck: the route uses the `resource` from `tw.json`),
+  `/despre` and `*` (the app's 404 page), all inside one `Layout` route.
+- `src/components/Layout.jsx`: the header (brand, navigation, light / dark toggle), `<Outlet />`
+  for the current page and the footer, written once. The navigation uses `NavLink`, which marks
+  the current page by itself (`end` on the `/` link, so it is not active everywhere).
+- `src/pages/TiruriPage.jsx`: the stage 7 `App` (state, loading effect, add / toggle / delete),
+  with the hero photo and KPIs; the truck counter moved into the list panel.
+- The card title is now a `Link` to `/tiruri/:id` (`data-testid="item-link"`, which replaces
+  `item-title`); a click elsewhere on the card still opens the route map.
+- `src/pages/TirDetaliuPage.jsx` reads the id with `useParams` and loads exactly that truck with
+  `fetchTir(id)` (`GET /tiruri/:id`); the effect depends on `[id]`, so Back / Forward work without
+  a reload. It shows what does not fit on the card: model, route category, status, id and the
+  route map with the simulated position (`TirTraseu`, shared with the map window).
+  A missing id (`/tiruri/999`, 404) shows an error and a link back, not an empty page.
+- `src/pages/DesprePage.jsx` describes the app; `src/pages/NotFoundPage.jsx` catches unknown URLs.
+- CSS Modules: every component and page has its `.module.css`; `App.css` became `index.css` and keeps
+  only the color variables (both themes), base elements and shared classes (`panel`, `surface`,
+  buttons, plate, status, badges, messages). The fixed values and their labels moved to
+  `src/constants.js`, small display helpers to `src/format.js`.
+- New `data-testid` attributes: `nav`, `item-link`, `detail`, `detail-title`, `error` / `loading`
+  on the detail page, `not-found`. The stage 7 attributes stay on the same elements.
+
 ## UI redesign: "on the road"
 
 After stage 5 the interface was redesigned after a look at fleet-management designs on Dribbble:
@@ -157,7 +186,8 @@ Photos (free, [Unsplash License](https://unsplash.com/license)), in `frontend/pu
 - [x] Stage 5: local state and events
 - [x] Stage 6: data from a mock API
 - [x] Stage 7: form and validation
-- [ ] Stage 8: routing and detail page
+- [x] Stage 8: routing and detail page
+- [ ] Stage 9: own backend with Express
 
 ## Stage 1 checklist
 

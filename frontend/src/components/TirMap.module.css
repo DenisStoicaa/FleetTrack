@@ -1,0 +1,77 @@
+/* Fereastra modală cu harta traseului */
+body:has(.dialog[open]) { overflow: hidden; }
+
+.dialog {
+  width: min(980px, calc(100% - 24px));
+  max-height: calc(100dvh - 24px);
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-hover);
+}
+
+.dialog[open] { animation: rise 0.35s cubic-bezier(0.2, 0.7, 0.2, 1); }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+}
+
+.dialog::backdrop {
+  background: rgb(12 10 8 / 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.inner { padding: 20px 22px 22px; }
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 8px;
+}
+
+.kicker :global(.status) { padding: 4px 12px 4px 10px; }
+
+.title {
+  margin: 0;
+  font-size: 1.7rem;
+  line-height: 1.15;
+}
+
+.sub {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+
+.close {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.close:hover {
+  border-color: var(--border-strong);
+  background: var(--chip);
+}
+
+@media (max-width: 700px) {
+  .inner { padding: 16px 14px; }
+  .title { font-size: 1.35rem; }
+}

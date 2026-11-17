@@ -1,0 +1,144 @@
+/* Pagina unui tir: fotografia și fișa una lângă alta, apoi harta traseului */
+.detail {
+  display: grid;
+  gap: 20px;
+}
+
+.back {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--pill);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.back:hover {
+  border-color: var(--accent);
+  color: var(--accent-strong);
+}
+
+.top {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.photo {
+  position: relative;
+  min-height: 360px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--chip);
+}
+
+.photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo::after {
+  content: "";
+  position: absolute;
+  inset: 50% 0 0;
+  background: linear-gradient(180deg, transparent, rgb(0 0 0 / 0.5));
+  pointer-events: none;
+}
+
+.photo :global(.status) {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 1;
+  box-shadow: 0 8px 20px -8px var(--accent-glow);
+}
+
+.photo :global(.plate) {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  z-index: 1;
+  font-size: 1.05rem;
+  box-shadow: 0 6px 16px -4px rgb(0 0 0 / 0.4);
+}
+
+.done img { filter: var(--photo-done); }
+.done :global(.status) { box-shadow: none; }
+
+.info {
+  display: flex;
+  flex-direction: column;
+}
+
+.kicker {
+  margin: 0 0 6px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.title { margin: 0 0 18px; }
+.doneTitle { color: var(--muted); }
+
+.fields {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  margin: 0;
+}
+
+.fields dt,
+.fields dd {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  border-top: 1px solid var(--border);
+}
+
+.fields dt {
+  padding-right: 24px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--faint);
+}
+
+.fields dd {
+  gap: 10px;
+  margin: 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.mono { font-family: var(--font-mono); }
+
+.mapTitle {
+  margin: 0 0 14px;
+  font-size: 1.25rem;
+}
+
+.missing {
+  display: grid;
+  gap: 16px;
+  max-width: 640px;
+}
+
+.missing :global(.error) { margin: 0; }
+
+@media (max-width: 860px) {
+  .top { grid-template-columns: 1fr; }
+  .photo { min-height: 0; aspect-ratio: 16 / 10; }
+}

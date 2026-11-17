@@ -21,6 +21,11 @@ export function fetchTiruri() {
   return request("/tiruri");
 }
 
+// GET /tiruri/:id: un singur tir (pagina de detaliu); 404 dacă id-ul nu există
+export function fetchTir(id) {
+  return request(`/tiruri/${id}`);
+}
+
 // POST /tiruri: tirul nou, fără id (id-ul îl dă serverul)
 export function createTir(tir) {
   return request("/tiruri", { method: "POST", body: JSON.stringify(tir) });

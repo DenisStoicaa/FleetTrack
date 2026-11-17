@@ -1,0 +1,28 @@
+.notFound {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.notFound img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 22px;
+  filter: var(--photo-done);
+}
+
+.notFound :global(.info) { margin: 0; padding: 0; }
+.notFound :global(.btn-primary) { margin-top: 8px; text-decoration: none; }
+
+.code {
+  margin: 8px 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--accent-strong);
+}

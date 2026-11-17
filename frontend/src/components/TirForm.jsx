@@ -2,18 +2,9 @@
 // sursa de adevăr pentru fiecare câmp. Nu apelează fetch: validează, transmite
 // datele prin onAdd și afișează eroarea, dacă apare.
 import { useState } from "react";
+import { CATEGORII, REMORCI } from "../constants.js";
+import styles from "./TirForm.module.css";
 
-// Valorile fixe din modelul de date (README)
-const REMORCI = [
-  { value: "refrigerated", label: "Frigorifică" },
-  { value: "curtainsider", label: "Prelată" },
-  { value: "tanker", label: "Cisternă" },
-];
-const CATEGORII = [
-  { value: "Domestic", label: "Domestic (intern)" },
-  { value: "EU", label: "EU" },
-  { value: "Non-EU", label: "Non-EU" },
-];
 const NUME_MAX = 100;
 const TEXT_MAX = 50;
 // numele șoferului: doar litere (cu diacritice), spații, cratimă, punct, apostrof
@@ -83,7 +74,7 @@ export default function TirForm({ onAdd }) {
   }
 
   return (
-    <form className="tir-form" onSubmit={handleSubmit} noValidate data-testid="form">
+    <form className={styles.form} onSubmit={handleSubmit} noValidate data-testid="form">
       <label>
         Număr și model
         <input
@@ -98,7 +89,7 @@ export default function TirForm({ onAdd }) {
         />
       </label>
 
-      <div className="form-row">
+      <div className={styles.row}>
         <label>
           Remorcă
           <select

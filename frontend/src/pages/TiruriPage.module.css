@@ -1,0 +1,185 @@
+/* Fotografia de sus (autostradă la apus), cu titlul și cifrele flotei pe sticlă */
+.hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 28px;
+  min-height: 460px;
+  padding: 28px;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  color: var(--on-hero);
+  background: #1a120c;
+}
+
+/* fotografia, care se mișcă încet (Ken Burns), cu gradientul deasupra */
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.hero::before {
+  background: var(--hero-photo) center 62% / cover no-repeat;
+  animation: drift 26s ease-in-out infinite alternate;
+}
+
+.hero::after { background: var(--hero-overlay); }
+
+@keyframes drift {
+  from { transform: scale(1.02); }
+  to { transform: scale(1.1) translateX(-1.5%); }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+}
+
+.heroCopy {
+  max-width: 640px;
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.kicker {
+  margin: 0 0 10px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--on-hero-muted);
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 0.92;
+  text-shadow: 0 6px 30px rgb(0 0 0 / 0.25);
+}
+
+.lead {
+  margin: 12px 0 0;
+  max-width: 46ch;
+  font-size: 1.08rem;
+  color: var(--on-hero-muted);
+  text-shadow: 0 1px 12px rgb(0 0 0 / 0.5);
+}
+
+/* cifrele flotei, pe sticlă mată */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 0;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 112px;
+  padding: 16px 18px;
+  border: 1px solid var(--glass-border);
+  border-radius: 22px;
+  background: var(--glass);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: var(--glass-text);
+  animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.stat:nth-child(2) { animation-delay: 60ms; }
+.stat:nth-child(3) { animation-delay: 120ms; }
+.stat:nth-child(4) { animation-delay: 180ms; }
+
+.stat dt {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--glass-muted);
+}
+
+.stat dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+}
+
+/* în tranzit = cifra „vie”, deci pe portocaliu */
+.statTransit {
+  background:
+    radial-gradient(120% 140% at 100% 0%, rgb(255 255 255 / 0.3), transparent 55%),
+    var(--accent);
+  border-color: transparent;
+  color: var(--on-accent);
+  box-shadow: 0 18px 36px -14px var(--accent-glow);
+}
+
+.statTransit dt { color: var(--on-accent); opacity: 0.72; }
+
+.statDone dd { color: var(--done-num); }
+
+/* formularul în stânga, lista în dreapta */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 28px;
+  align-items: start;
+  margin-top: 40px;
+}
+
+.formPanel {
+  position: sticky;
+  top: 20px;
+}
+
+.formPanel :global(.panel-head) { margin: 0 0 18px; }
+.formPanel h2 { font-size: 1.5rem; }
+
+@media (max-width: 960px) {
+  .grid { grid-template-columns: 1fr; }
+  .formPanel { position: static; }
+}
+
+@media (max-width: 700px) {
+  .hero {
+    min-height: 0;
+    padding: 16px;
+    gap: 22px;
+    border-radius: 28px;
+  }
+
+  .heroCopy { margin-top: 96px; }
+
+  /* fotografia e mai încărcată la dimensiunea asta, deci umbra începe mai sus */
+  .hero::after {
+    background: linear-gradient(180deg, rgb(20 12 6 / 0.35), rgb(20 12 6 / 0.6) 30%, rgb(20 12 6 / 0.85));
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .stat {
+    min-height: 96px;
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  .stat dd { font-size: 2.1rem; }
+
+  .grid {
+    gap: 20px;
+    margin-top: 28px;
+  }
+}
