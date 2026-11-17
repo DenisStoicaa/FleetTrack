@@ -9,15 +9,29 @@
 
 .badge {
   position: absolute;
-  top: 10px;
-  left: 10px;
-  padding: 3px 10px;
+  top: 12px;
+  left: 12px;
+  z-index: 1;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
   border-radius: var(--pill);
-  background: var(--surface);
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  backdrop-filter: blur(6px);
   color: var(--muted);
-  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
   font-weight: 600;
-  box-shadow: var(--shadow-sm);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* vignetă discretă pe marginile hărții */
+.canvas::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 60px -10px rgb(0 0 0 / 0.25);
 }
 
 .svg {
@@ -59,6 +73,15 @@
   stroke: var(--accent);
   stroke-width: 5;
   vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 4px var(--accent-glow));
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw 1.4s var(--ease) 0.15s forwards;
+}
+
+/* porțiunea parcursă „se desenează” la deschidere (pathLength=1 în JSX) */
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
 }
 
 .done .roadDone { stroke: var(--done); }
@@ -144,12 +167,15 @@
   background: var(--surface-2);
 }
 
+.statWide { border-left: 3px solid var(--accent); }
+
 .stat dt {
-  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
   font-weight: 600;
   color: var(--muted);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.1em;
 }
 
 .stat dd {
@@ -188,7 +214,12 @@
 /* opririle, în ordine */
 .route h3 {
   margin: 18px 0 10px;
-  font-size: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 .steps {
@@ -209,6 +240,12 @@
   border-radius: var(--pill);
   font-size: 0.84rem;
   color: var(--muted);
+  animation: stepIn 0.4s var(--ease) both;
+  animation-delay: calc(var(--k, 0) * 40ms + 0.2s);
+}
+
+@keyframes stepIn {
+  from { opacity: 0; transform: translateY(6px); }
 }
 
 .stepDot {

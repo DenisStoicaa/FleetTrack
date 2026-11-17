@@ -1,8 +1,10 @@
 // Formularul de adăugare a unui tir. Formular controlat: state-ul React este
 // sursa de adevăr pentru fiecare câmp. Nu apelează fetch: validează, transmite
-// datele prin onAdd și afișează eroarea, dacă apare.
+// datele prin onAdd și afișează eroarea, dacă apare. Deasupra câmpurilor, o
+// previzualizare arată tirul așa cum va apărea în flotă, pe măsură ce se scrie.
 import { useState } from "react";
-import { CATEGORII, REMORCI } from "../constants.js";
+import { CATEGORII, ETICHETE_REMORCA, FOTO_REMORCA, REMORCI } from "../constants.js";
+import { initiale, numarSiModel } from "../format.js";
 import styles from "./TirForm.module.css";
 
 const NUME_MAX = 100;
@@ -28,6 +30,11 @@ export default function TirForm({ onAdd }) {
   function handleChange(e) {
     const { name, value } = e.target;
     setValori((prev) => ({ ...prev, [name]: value }));
+    // câmpul corectat nu mai e marcat greșit
+    if (name === campGresit) {
+      setCampGresit(null);
+      setEroare("");
+    }
   }
 
   // Întoarce [câmp, mesaj] pentru prima problemă găsită sau null dacă totul e valid
@@ -73,10 +80,34 @@ export default function TirForm({ onAdd }) {
     }
   }
 
+  const [numarPrev, modelPrev] = numarSiModel(valori.name.trim());
+
   return (
     <form className={styles.form} onSubmit={handleSubmit} noValidate data-testid="form">
+      {/* previzualizarea: doar pentru ochi, cititoarele de ecran citesc câmpurile */}
+      <div className={styles.preview} aria-hidden="true">
+        <img key={valori.trailerType} src={FOTO_REMORCA[valori.trailerType]} alt="" />
+        <div className={styles.previewBody}>
+          <span className="plate">
+            <span className="plate-eu">RO</span>
+            {numarPrev || "B 000 FLT"}
+          </span>
+          <strong>{modelPrev || "Model camion"}</strong>
+          <span className={styles.previewMeta}>
+            <span className="avatar">{initiale(valori.driver.trim() || "?")}</span>
+            {valori.driver.trim() || "Șofer"} → {valori.destination.trim() || "Destinație"}
+          </span>
+          <span className={styles.previewTags}>
+            {ETICHETE_REMORCA[valori.trailerType]} · {valori.category}
+          </span>
+        </div>
+      </div>
+
       <label>
-        Număr și model
+        <span className={styles.labelRow}>
+          Număr și model
+          <span className={styles.count} aria-hidden="true">{valori.name.length}/{NUME_MAX}</span>
+        </span>
         <input
           type="text"
           name="name"
@@ -157,7 +188,17 @@ export default function TirForm({ onAdd }) {
       )}
 
       <button type="submit" className="btn-primary" disabled={trimite} data-testid="form-submit">
-        {trimite ? "Se salvează..." : "Adaugă tirul"}
+        {trimite ? (
+          <>
+            <span className={styles.spinner} aria-hidden="true"></span>
+            Se salvează...
+          </>
+        ) : (
+          <>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+            Adaugă tirul
+          </>
+        )}
       </button>
     </form>
   );

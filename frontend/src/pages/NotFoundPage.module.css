@@ -1,28 +1,65 @@
 .notFound {
-  display: grid;
-  justify-items: center;
-  gap: 10px;
-  max-width: 640px;
-  margin: 0 auto;
-  text-align: center;
+  position: relative;
+  min-height: min(620px, 78dvh);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: #0b0c0e;
+  color: #fff;
+  box-shadow: var(--shadow);
 }
 
 .notFound img {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  aspect-ratio: 16 / 9;
+  height: 100%;
   object-fit: cover;
-  border-radius: 22px;
-  filter: var(--photo-done);
+  filter: grayscale(0.7) brightness(0.45);
 }
 
-.notFound :global(.info) { margin: 0; padding: 0; }
-.notFound :global(.btn-primary) { margin-top: 8px; text-decoration: none; }
+.body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  min-height: inherit;
+  padding: 36px;
+  background: linear-gradient(0deg, rgb(8 8 10 / 0.85), transparent 70%);
+}
+
+.body :global(.eyebrow) { color: rgb(255 255 255 / 0.6); }
 
 .code {
-  margin: 8px 0 0;
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  color: var(--accent-strong);
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-size: clamp(5rem, 16vw, 11rem);
+  font-weight: 900;
+  line-height: 0.85;
+  letter-spacing: -0.06em;
+  color: transparent;
+  -webkit-text-stroke: 2px var(--accent);
+  animation: flicker 3s steps(1) infinite;
+}
+
+/* ca un panou luminos care pâlpâie */
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  47% { opacity: 1; }
+  48% { opacity: 0.35; }
+  50% { opacity: 1; }
+  52% { opacity: 0.5; }
+  53% { opacity: 1; }
+}
+
+.body h2 { margin: 6px 0 0 !important; font-size: 2rem !important; }
+
+.text {
+  margin: 8px 0 22px;
+  color: rgb(255 255 255 / 0.75);
+}
+
+@media (max-width: 600px) {
+  .body { padding: 22px; }
 }

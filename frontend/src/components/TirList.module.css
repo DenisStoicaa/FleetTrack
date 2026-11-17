@@ -1,36 +1,94 @@
-/* Lista de carduri, într-o grilă care se adaptează la lățime */
 .list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
-  gap: 22px;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-/* Lista goală: rampele de încărcare sunt goale și ele */
-.empty {
-  display: grid;
-  justify-items: center;
-  gap: 18px;
-  padding: 28px 16px 40px;
-  border: 2px dashed var(--border-strong);
+/* Vederea „tabel”: rânduri ca pe un panou de plecări */
+.board {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  text-align: center;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.boardHead {
+  display: grid;
+  grid-template-columns: var(--board-cols);
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.board,
+.boardHead {
+  --board-cols: minmax(118px, 1.2fr) minmax(110px, 1fr) minmax(140px, 1.5fr) 108px 42px 72px;
+}
+
+.empty {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
 }
 
 .empty img {
-  width: min(100%, 420px);
-  aspect-ratio: 16 / 10;
+  display: block;
+  width: 100%;
+  height: 300px;
   object-fit: cover;
-  border-radius: 22px;
-  filter: var(--photo-done);
+  filter: grayscale(0.6) brightness(0.55);
 }
 
-.empty p {
-  margin: 0;
+.emptyText {
+  position: absolute;
+  left: 24px;
+  bottom: 20px;
+  color: #fff;
+}
+
+.emptyText .eyebrow,
+.emptyText :global(.eyebrow) { color: rgb(255 255 255 / 0.7); }
+
+.emptyText p:last-child {
+  margin: 4px 0 0;
   font-family: var(--font-display);
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-stretch: 112%;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.noMatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 48px 20px;
+  border: 1.5px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
   color: var(--muted);
+  text-align: center;
+}
+
+.noMatch svg { font-size: 2rem; color: var(--faint); }
+.noMatch p { margin: 0; }
+
+@media (max-width: 900px) {
+  .boardHead { display: none; }
 }

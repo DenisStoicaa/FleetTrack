@@ -3,19 +3,8 @@
 // Datele de traseu sunt de test, din data/harta.js.
 import { useState } from "react";
 import { ORASE, TRASEE, MARI } from "../data/harta.js";
+import { VITEZA_MEDIE, calculeazaTraseu, formatKm, formatOre } from "../traseu.js";
 import styles from "./TirTraseu.module.css";
-
-const FACTOR_DRUM = 1.2;  // drumul real e cu ~20% mai lung decât linia dreaptă
-const VITEZA_MEDIE = 70;  // km/h, cu tot cu pauze
-
-// Distanța în linie dreaptă între două puncte [lat, lon], în km
-function distantaKm([lat1, lon1], [lat2, lon2]) {
-  const rad = Math.PI / 180;
-  const a =
-    Math.sin(((lat2 - lat1) * rad) / 2) ** 2 +
-    Math.cos(lat1 * rad) * Math.cos(lat2 * rad) * Math.sin(((lon2 - lon1) * rad) / 2) ** 2;
-  return 6371 * 2 * Math.asin(Math.sqrt(a));
-}
 
 // [lat, lon] -> [x, y] pe hartă (1° latitudine = 100 de unități)
 function proiectie([lat, lon]) {
@@ -48,23 +37,6 @@ function caleSvg(curbe) {
   return `M${pt(curbe[0][0])}` + curbe.map(([, c1, c2, p]) => ` C${pt(c1)} ${pt(c2)} ${pt(p)}`).join("");
 }
 
-// Pe ce tronson se află tirul și cât din el a parcurs
-function calculeazaTraseu(opriri, progres) {
-  const coordonate = opriri.map((o) => ORASE[o]);
-  const tronsoane = coordonate.slice(1).map((p, i) => distantaKm(coordonate[i], p) * FACTOR_DRUM);
-  const total = tronsoane.reduce((s, km) => s + km, 0);
-  const parcurs = total * progres;
-
-  let index = 0;
-  let rest = parcurs;
-  while (index < tronsoane.length - 1 && rest > tronsoane[index]) {
-    rest -= tronsoane[index];
-    index++;
-  }
-  const t = Math.min(rest / tronsoane[index], 1);
-  return { coordonate, total, parcurs, index, t };
-}
-
 // Cadrul hărții: tot traseul, cu margine, în formatul cerut (lățime / înălțime)
 function cadru(puncte, format) {
   const xs = puncte.map((p) => p[0]);
@@ -77,14 +49,6 @@ function cadru(puncte, format) {
   else { y -= (w / format - h) / 2; h = w / format; }
   return { x, y, w, h };
 }
-
-function formatOre(ore) {
-  const h = Math.floor(ore);
-  const min = Math.round((ore - h) * 60);
-  return h > 0 ? `${h} h ${min} min` : `${min} min`;
-}
-
-const formatKm = (km) => `${Math.round(km).toLocaleString("ro-RO")} km`;
 
 const formatSosire = new Intl.DateTimeFormat("ro-RO", {
   weekday: "long",
@@ -230,7 +194,7 @@ function Harta({ tir, traseu, acum }) {
           {/* tot drumul (rămas = punctat), apoi porțiunea parcursă peste el */}
           <path d={caleSvg(curbe)} className={styles.roadCasing} />
           <path d={caleSvg(curbe)} className={styles.road} />
-          <path d={caleSvg(parcurse)} className={styles.roadDone} />
+          <path d={caleSvg(parcurse)} className={styles.roadDone} pathLength="1" />
 
           {puncte.map(([x, y], i) => {
             const capat = i === 0 || i === puncte.length - 1;
@@ -320,7 +284,7 @@ function Harta({ tir, traseu, acum }) {
             if (i <= atinse) stare = styles.passed;
             if (oras === urmatoarea && progres < 1) stare = styles.next;
             return (
-              <li key={oras} className={stare || undefined}>
+              <li key={oras} className={stare || undefined} style={{ "--k": i }}>
                 <span className={styles.stepDot} aria-hidden="true"></span>
                 {oras}
                 {stare === styles.next && <span className="visually-hidden"> (următoarea oprire)</span>}

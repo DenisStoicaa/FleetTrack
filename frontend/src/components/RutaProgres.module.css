@@ -1,0 +1,81 @@
+.ruta {
+  --c: var(--accent);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.done { --c: var(--done); }
+
+.ends {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.8rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.ends span,
+.ends strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ends strong { color: var(--text); font-weight: 700; }
+
+.track {
+  position: relative;
+  height: 6px;
+  border-radius: var(--pill);
+  /* drumul rămas: linie punctată */
+  background:
+    repeating-linear-gradient(90deg, var(--border-strong) 0 6px, transparent 6px 11px) center / 100% 2px no-repeat;
+}
+
+.fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--p) * 100%);
+  border-radius: inherit;
+  background: var(--c);
+  box-shadow: 0 0 12px -2px var(--c);
+  transform-origin: left;
+  animation: grow 1s var(--ease) both;
+}
+
+/* camionul, la capătul porțiunii parcurse */
+.truck {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--p) * 100%);
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  margin: -12px 0 0 -12px;
+  border-radius: 50%;
+  background: var(--c);
+  color: #16171b;
+  font-size: 0.78rem;
+  box-shadow: 0 0 0 3px var(--surface), 0 4px 10px -2px var(--c);
+  animation: slide 1s var(--ease) both;
+}
+
+.done .truck { color: #0b0c0e; }
+
+@keyframes grow {
+  from { transform: scaleX(0); }
+}
+
+@keyframes slide {
+  from { left: 0; }
+}
+
+.compact { gap: 6px; }
+.compact .truck { width: 20px; height: 20px; margin: -10px 0 0 -10px; font-size: 0.68rem; }
+.compact .ends { font-size: 0.76rem; }
+
+.fara .track { opacity: 0.6; }
+.fara .ends span { font-style: italic; }
