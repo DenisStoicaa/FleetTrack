@@ -25,7 +25,7 @@ const FUNCTII = [
   },
 ];
 
-const STACK = ["React", "Vite", "React Router", "CSS Modules", "json-server"];
+const STACK = ["React", "Vite", "React Router", "CSS Modules", "Node.js", "Express"];
 const URMEAZA = ["Node.js", "Express", "MariaDB", "Docker"];
 
 export default function DesprePage() {

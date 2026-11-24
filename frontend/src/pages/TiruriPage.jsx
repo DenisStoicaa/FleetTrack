@@ -32,7 +32,7 @@ function vedereInitiala() {
 }
 
 export default function TiruriPage() {
-  // Lista pornește goală: datele vin de la server (json-server, db.json)
+  // Lista pornește goală: datele vin de la server (API-ul Express din backend/)
   const [tiruri, setTiruri] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -63,7 +63,7 @@ export default function TiruriPage() {
         const data = await fetchTiruri();
         if (!ignore) setTiruri(data);
       } catch (err) {
-        if (!ignore) setError(`Nu am putut încărca flota: ${err.message}. Rulează npm run api?`);
+        if (!ignore) setError(`Nu am putut încărca flota: ${err.message}. Rulează npm run dev în backend/?`);
       } finally {
         if (!ignore) setLoading(false);
       }

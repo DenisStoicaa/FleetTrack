@@ -23,15 +23,13 @@ Sample data used across all stages:
 4. BV 404 FLT · Mercedes Actros, in transit, curtainsider (driver Elena Dumitrescu, to Viena), added in stage 6
 5. TM 505 FLT · MAN TGX, arrived, refrigerated (driver Mihai Stan, to Constanța), added in stage 6
 
-From stage 6 the data lives in `frontend/db.json` and is served by json-server.
+From stage 9 the data is served by our own Express API in `backend/` (kept in memory until stage 10).
 
 ## How to run
 
 ```bash
-cd frontend
-npm install
-npm run api    # terminal 1: mock API, http://localhost:3001
-npm run dev    # terminal 2: the app, http://localhost:5173
+cd backend && npm install && npm run dev     # terminal 1: the API, http://localhost:3001
+cd frontend && npm install && npm run dev    # terminal 2: the app, http://localhost:5173
 ```
 
 Then open the address printed in the second terminal (http://localhost:5173).
@@ -49,6 +47,7 @@ The stage 1–2 static files (HTML mockup, CSS, `tiruri.js`) are kept in `mockup
 | Claude | stage 5: reading the stage guide, moving the list into `useState`, the immutable `handleToggleSosit` / `handleDelete` functions passed down through props, the controlled checkbox and the delete button in `TirCard`, the light / dark toggle with `data-theme` |
 | Claude | stage 6: reading the stage guide, `db.json` with five trucks, the `api` script with json-server 0.17.4, `api.js` with `fetchTiruri` and the URL from `VITE_API_URL`, loading the list with `useEffect` and the loading / error states, testing with the API stopped and with `--delay 4000` |
 | Claude | stage 7: reading the stage guide, the shared `request` function and the CRUD functions in `api.js`, the controlled `TirForm` with validation, saving add / toggle / delete on the server, `tw.json` and the `data-testid` attributes, testing with the API stopped and with `--delay` |
+| Claude | stage 9: reading the stage guide, the Express backend (`app.js` / `server.js`, the `/tiruri` router, server side validation with a whitelist of fields, CORS, 404 and error handlers), reading `{ error }` in `api.js`, removing json-server, testing with curl and in the browser |
 | Claude | stage 8: reading the stage guide, React Router (`BrowserRouter`, the route map, `Layout` with `NavLink` and `Outlet`), the detail page with `useParams` and `fetchTir`, the about and 404 pages, splitting `App.css` into `index.css` and CSS Modules, testing the routes and the `data-testid` attributes |
 
 Details per stage: see the [ai-log/](ai-log/) folder.
@@ -199,6 +198,44 @@ The trucks in transit now move along their routes in real time (simulated; there
 - The map drawing helpers moved from `TirTraseu.jsx` to `src/harta-svg.js`, shared by both maps.
 - The simulation restarts on a page reload; in-app navigation keeps it running.
 
+## Stage 9: own backend
+
+json-server is gone. The API is an Express 5 server in `backend/`, with REST
+routes, server side validation and CORS. Data is still kept in memory and
+resets on restart (stage 10 moves it to MariaDB).
+
+    cd backend && npm install && npm run dev     # terminal 1, port 3001
+    cd frontend && npm install && npm run dev    # terminal 2, port 5173
+
+- `backend/src/app.js` builds the app: `cors()` (origin from `CORS_ORIGIN`, default
+  http://localhost:5173), `express.json()`, `GET /health`, the `/tiruri` router, a 404 handler
+  for unknown routes and a central error handler. `server.js` only starts it on `PORT` (3001);
+  both variables are documented in `backend/.env.example`.
+- `backend/src/routes/tiruri.js`: `GET /tiruri`, `GET /tiruri/:id`, `POST /tiruri` (201),
+  `PATCH /tiruri/:id`, `DELETE /tiruri/:id` (204). `gasesteIndex` answers 400 for an invalid id
+  and 404 `{ "error": "Tirul nu există" }` for a missing truck. The five sample trucks start in memory.
+- `backend/src/validation.js` checks everything the client sends, with the same rules and fixed
+  values as the form and `constants.js`: `name` required, max 100; `driver` required, max 50,
+  letters only; `destination` required, max 50; `trailerType` and `category` from the fixed lists;
+  `arrived` a boolean (default false). PATCH checks only the fields sent. Only these fields are kept
+  (whitelist): an `id` or `user_id` sent by the client is ignored. Invalid data gets 400 with
+  `{ "error": "..." }`; malformed JSON gets 400 too.
+- Frontend: `request` in `src/api.js` now reads `{ error }` from the response, so the page shows the
+  server's message (e.g. "Tirul nu există" on `/tiruri/999`) instead of "Eroare server: 404".
+  `frontend/db.json`, the `api` script and the `json-server` package were removed.
+
+Quick check with curl (Git Bash):
+
+    curl -s -w ' -> %{http_code}\n' http://localhost:3001/tiruri
+    curl -s -w ' -> %{http_code}\n' -X POST http://localhost:3001/tiruri -H "Content-Type: application/json" \
+      -d '{"name":"IS 606 FLT · Iveco S-Way","arrived":false,"trailerType":"tanker","category":"EU","driver":"Ana Marinescu","destination":"Budapesta"}'
+    curl -s -w ' -> %{http_code}\n' -X PATCH http://localhost:3001/tiruri/6 -H "Content-Type: application/json" -d '{"arrived":true}'
+    curl -s -w ' -> %{http_code}\n' -X POST http://localhost:3001/tiruri -H "Content-Type: application/json" -d '{"name":""}'
+    curl -s -w ' -> %{http_code}\n' http://localhost:3001/tiruri/999
+    curl -s -w ' -> %{http_code}\n' -X DELETE http://localhost:3001/tiruri/6
+
+Expected: 200, 201, 200, 400, 404, 204.
+
 ## Status
 
 - [x] Stage 1: static mockup
@@ -209,7 +246,8 @@ The trucks in transit now move along their routes in real time (simulated; there
 - [x] Stage 6: data from a mock API
 - [x] Stage 7: form and validation
 - [x] Stage 8: routing and detail page
-- [ ] Stage 9: own backend with Express
+- [x] Stage 9: own backend with Express
+- [ ] Stage 10: MariaDB and full CRUD
 
 ## Stage 1 checklist
 
