@@ -89,6 +89,28 @@
   stroke-linecap: round;
 }
 
+/* resetarea: separată de viteze, ca să nu fie apăsată din greșeală */
+.reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.reset:hover { background: var(--surface-2); color: var(--text); }
+.reset svg { width: 15px; height: 15px; stroke-width: 2.2; }
+.compact .reset { height: 32px; padding: 0 9px; }
+
 .compact .speeds button { min-width: 32px; height: 26px; padding: 0 6px; font-size: 0.7rem; }
 .compact .clock { font-size: 0.78rem; }
 

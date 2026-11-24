@@ -1,8 +1,9 @@
 // Simularea curselor în timp real: un ceas comun pentru toată aplicația.
 // Fiecare tir în tranzit înaintează pe traseul lui cu VITEZA_MEDIE, măsurată în timpul simulat.
 // La viteza 1× timpul simulat curge ca cel real; la 60× o oră de drum durează un minut.
-// Nimic nu se salvează pe server: la reîncărcare, tirurile pornesc din nou din datele de test,
-// iar sosirea o confirmă dispecerul (bifa „Sosit”), ca până acum.
+// Nimic nu se salvează pe server: starea simulării stă în browser (localStorage), deci rezistă
+// la reîncărcare; butonul „Resetează” readuce tirurile la pozițiile din datele de test.
+// Sosirea o confirmă dispecerul (bifa „Sosit”), ca până acum.
 import { createContext, useContext, useEffect, useRef } from "react";
 import { VITEZA_MEDIE, lungimeTraseu, traseuPentru } from "./traseu.js";
 
@@ -16,7 +17,7 @@ export const VITEZA_IMPLICITA = 60;
 
 const ORA = 3600 * 1000;
 
-// Starea simulării: { simMs, porniri, ceas, viteza, setViteza, pleacaDinNou, abonare }
+// Starea simulării: { simMs, porniri, ceas, viteza, setViteza, pleacaDinNou, reseteaza, abonare }
 export const SimulareContext = createContext(null);
 
 export function useSimulare() {

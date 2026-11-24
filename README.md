@@ -196,7 +196,9 @@ The trucks in transit now move along their routes in real time (simulated; there
   confirm with the "arrived" switch: the simulation never writes to the server. Unticking "arrived"
   sends the truck on a new trip from the start of its route.
 - The map drawing helpers moved from `TirTraseu.jsx` to `src/harta-svg.js`, shared by both maps.
-- The simulation restarts on a page reload; in-app navigation keeps it running.
+- The simulation state (simulated clock and the trucks restarted after an "arrived" untick) is saved
+  in `localStorage`, so a page reload continues where it left off. The "Resetează" button next to
+  the speed controls puts every truck back at its starting position from `data/harta.js`.
 
 ## Stage 9: own backend
 
