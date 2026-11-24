@@ -154,6 +154,8 @@
 
 .listPanel { min-width: 0; }
 
+.fleetMap { min-width: 0; }
+
 /* formularul rămâne lipit sus la derulare și nu e niciodată mai înalt decât ecranul:
    dacă nu încape, derulează doar el, nu toată pagina */
 .rail {
@@ -334,7 +336,8 @@
   .pageHead { order: 0; }
   .kpis { order: 1; }
   .rail { order: 2; position: static; max-height: none; overflow: visible; margin-bottom: 28px; }
-  .listPanel { order: 3; }
+  .fleetMap { order: 3; }
+  .listPanel { order: 4; }
 }
 
 @media (max-width: 860px) {

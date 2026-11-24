@@ -177,6 +177,28 @@ Photos (free, [Unsplash License](https://unsplash.com/license)), in `frontend/pu
 | `truck-tanker.jpg` | [@zemos](https://unsplash.com/photos/a-large-tanker-truck-parked-on-the-side-of-the-road-yXAFCxpaQcw) |
 | `empty-loading-docks.jpg` | [@themrjaxon](https://unsplash.com/photos/a-row-of-semi-trucks-parked-next-to-each-other-fP4OG67TVes) |
 
+## Live trip simulation
+
+The trucks in transit now move along their routes in real time (simulated; there is no GPS).
+
+- `src/simulare.js` + `src/components/SimulareProvider.jsx`: one simulation clock for the whole app,
+  placed around `<App />` in `main.jsx`. Four times a second the simulated time advances by the real
+  time elapsed multiplied by the chosen speed: pause, 1× (real time), 60× (1 minute = 1 hour of
+  driving, the default) or 600×. The speed is remembered in `localStorage`.
+- Each truck starts from the progress in `data/harta.js` and drives at `VITEZA_MEDIE` (70 km/h)
+  of simulated time. Routes were added for trucks 4 and 5; a truck added from the form whose
+  destination is a city on the map gets a direct route from the depot (București), starting at 0.
+- `src/components/HartaFlotei.jsx`: a new "Harta flotei" panel on the fleet page with every visible
+  truck (the filters apply) on one map, each in its own color; a click (or Enter) on a truck opens
+  its route map. The cards, the table rows, the KPI "km to go", the "closest to arrival" sort, the
+  map window and the detail page all read the same simulated position, and the ETA is computed
+  from the simulated clock.
+- When a truck reaches its destination it shows "La destinație" and a toast asks the dispatcher to
+  confirm with the "arrived" switch: the simulation never writes to the server. Unticking "arrived"
+  sends the truck on a new trip from the start of its route.
+- The map drawing helpers moved from `TirTraseu.jsx` to `src/harta-svg.js`, shared by both maps.
+- The simulation restarts on a page reload; in-app navigation keeps it running.
+
 ## Status
 
 - [x] Stage 1: static mockup

@@ -269,6 +269,15 @@
 
 .empty { color: var(--muted); }
 
+/* simularea: tirul alunecă între doi pași ai ceasului (250 ms) */
+.truck { transition: transform 0.3s linear; }
+
+.simBar { margin-top: 12px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .truck { transition: none; }
+}
+
 @media (max-width: 700px) {
   .stats { grid-template-columns: 1fr 1fr; }
   .statWide { grid-column: 1 / -1; }

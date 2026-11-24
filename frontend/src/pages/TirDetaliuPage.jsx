@@ -12,6 +12,7 @@ import {
   ICONITE_REMORCA,
 } from "../constants.js";
 import { initiale, numarSiModel, nuanta } from "../format.js";
+import { progresSimulat, useSimulare } from "../simulare.js";
 import styles from "./TirDetaliuPage.module.css";
 
 export default function TirDetaliuPage() {
@@ -21,6 +22,7 @@ export default function TirDetaliuPage() {
   const [error, setError] = useState(null);
   const [eroareSalvare, setEroareSalvare] = useState(null);
   const [salveaza, setSalveaza] = useState(false);
+  const { simMs, porniri, pleacaDinNou } = useSimulare();
 
   // Se reîncarcă dacă se schimbă id-ul din adresă (de exemplu cu Înapoi / Înainte)
   useEffect(() => {
@@ -47,7 +49,10 @@ export default function TirDetaliuPage() {
   async function handleToggle() {
     setSalveaza(true);
     try {
-      setTir(await updateTir(tir.id, { arrived: !tir.arrived }));
+      const actualizat = await updateTir(tir.id, { arrived: !tir.arrived });
+      setTir(actualizat);
+      // scos din „sosit”: în simulare pleacă într-o cursă nouă, de la începutul traseului
+      if (!actualizat.arrived) pleacaDinNou(actualizat.id);
       setEroareSalvare(null);
     } catch (err) {
       setEroareSalvare(`Nu am putut actualiza tirul: ${err.message}`);
@@ -82,6 +87,7 @@ export default function TirDetaliuPage() {
   }
 
   const [numar, model] = numarSiModel(tir.name);
+  const laDestinatie = !tir.arrived && progresSimulat(tir, simMs, porniri) >= 1;
 
   return (
     <section className={`panel ${styles.detail}`} data-testid="detail">
@@ -106,9 +112,9 @@ export default function TirDetaliuPage() {
               <span className="plate-eu">RO</span>
               {numar}
             </span>
-            <span className={tir.arrived ? "status done" : "status"}>
+            <span className={tir.arrived || laDestinatie ? "status done" : "status"}>
               <span className="dot" aria-hidden="true"></span>
-              {tir.arrived ? "Sosit" : "În tranzit"}
+              {tir.arrived ? "Sosit" : laDestinatie ? "La destinație" : "În tranzit"}
             </span>
           </div>
           <p className={styles.kicker}>Fișa tirului #{tir.id}</p>
@@ -161,7 +167,7 @@ export default function TirDetaliuPage() {
             </div>
             <div>
               <dt>Stare</dt>
-              <dd>{tir.arrived ? "Sosit la destinație" : "În tranzit"}</dd>
+              <dd>{tir.arrived ? "Sosit la destinație" : laDestinatie ? "La destinație, de confirmat" : "În tranzit"}</dd>
             </div>
             <div>
               <dt>ID</dt>

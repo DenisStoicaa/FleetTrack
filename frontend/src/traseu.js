@@ -1,6 +1,6 @@
 // Calculele de traseu, comune hărții (TirTraseu), cardului, rândului din tabel și filtrelor.
 // Datele de traseu sunt de test, din data/harta.js (nu vin dintr-un GPS real).
-import { ORASE, TRASEE } from "./data/harta.js";
+import { DEPOU, ORASE, TRASEE } from "./data/harta.js";
 
 export const FACTOR_DRUM = 1.2;  // drumul real e cu ~20% mai lung decât linia dreaptă
 export const VITEZA_MEDIE = 70;  // km/h, cu tot cu pauze
@@ -31,15 +31,35 @@ export function calculeazaTraseu(opriri, progres) {
   return { coordonate, total, parcurs, index, t };
 }
 
+// Lungimea întregului drum, în km
+export function lungimeTraseu(opriri) {
+  return calculeazaTraseu(opriri, 0).total;
+}
+
+// "Cluj Napoca" și "cluj-napoca" sunt același oraș
+const cheieOras = (s) => s.normalize("NFD").replace(/\p{Diacritic}/gu, "").replace(/[\s-]+/g, " ").trim().toLowerCase();
+
+// Traseul unui tir: cel din data/harta.js sau, pentru un tir fără traseu (adăugat din formular)
+// cu o destinație cunoscută pe hartă, drumul direct din depou, pornit de la 0.
+// null dacă destinația nu e pe hartă.
+export function traseuPentru(tir) {
+  if (TRASEE[tir.id]) return TRASEE[tir.id];
+  const destinatie = Object.keys(ORASE).find((o) => cheieOras(o) === cheieOras(tir.destination ?? ""));
+  if (!destinatie || destinatie === DEPOU) return null;
+  return { opriri: [DEPOU, destinatie], progres: 0 };
+}
+
 // Ce afișează cardul despre traseu: de unde pleacă, cât a parcurs, cât mai are.
-// null pentru un tir fără traseu (de exemplu unul adăugat din formular).
-export function rezumatTraseu(tir) {
-  const traseu = TRASEE[tir.id];
+// progres vine din simulare (simulare.js); fără el, cel din datele de test.
+// null pentru un tir fără traseu.
+export function rezumatTraseu(tir, progresSimulat) {
+  const traseu = traseuPentru(tir);
   if (!traseu) return null;
-  const progres = tir.arrived ? 1 : traseu.progres;
+  const progres = tir.arrived ? 1 : progresSimulat ?? traseu.progres;
   const { total, parcurs } = calculeazaTraseu(traseu.opriri, progres);
   const ramas = total - parcurs;
   return {
+    laDestinatie: !tir.arrived && progres >= 1,
     plecare: traseu.opriri[0],
     opriri: traseu.opriri.length,
     progres,

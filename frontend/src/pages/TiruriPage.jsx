@@ -7,10 +7,12 @@ import TirMap from "../components/TirMap.jsx";
 import TirForm from "../components/TirForm.jsx";
 import Toasts from "../components/Toasts.jsx";
 import CountUp from "../components/CountUp.jsx";
+import HartaFlotei from "../components/HartaFlotei.jsx";
 import { createTir, deleteTir, fetchTiruri, updateTir } from "../api.js";
 import { REMORCI, ICONITE_REMORCA } from "../constants.js";
 import { numarSiModel } from "../format.js";
 import { formatKm, rezumatTraseu } from "../traseu.js";
+import { progresSimulat, useSimulare, useSosiriSimulate } from "../simulare.js";
 import styles from "./TiruriPage.module.css";
 
 const SORTARI = [
@@ -29,9 +31,6 @@ function vedereInitiala() {
   }
 }
 
-// progresul folosit la sortare: tirurile fără traseu la final
-const progresPentruSortare = (t) => rezumatTraseu(t)?.progres ?? -1;
-
 export default function TiruriPage() {
   // Lista pornește goală: datele vin de la server (json-server, db.json)
   const [tiruri, setTiruri] = useState([]);
@@ -48,7 +47,10 @@ export default function TiruriPage() {
   const [vedere, setVedere] = useState(vedereInitiala);
 
   const [toasts, setToasts] = useState([]);
-  const [acum] = useState(() => Date.now()); // pentru ora estimată de sosire din carduri
+
+  // simularea curselor: progresul fiecărui tir la momentul simulat curent
+  const { simMs, porniri, pleacaDinNou } = useSimulare();
+  const progres = (t) => progresSimulat(t, simMs, porniri);
 
   const cautareRef = useRef(null);
 
@@ -94,6 +96,11 @@ export default function TiruriPage() {
     setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 3600);
   }
 
+  // un tir ajuns la destinație în simulare: anunț, iar dispecerul confirmă cu bifa „Sosit”
+  useSosiriSimulate(tiruri, (tir) =>
+    anunta(`${numarSiModel(tir.name)[0]} a ajuns la ${tir.destination} · bifează „Sosit” pentru confirmare`, "ok")
+  );
+
   function schimbaVedere(noua) {
     setVedere(noua);
     try {
@@ -117,6 +124,8 @@ export default function TiruriPage() {
     try {
       const actualizat = await updateTir(id, { arrived: !tir.arrived });
       setTiruri((prev) => prev.map((t) => (t.id === id ? actualizat : t)));
+      // scos din „sosit”: în simulare pleacă într-o cursă nouă, de la începutul traseului
+      if (!actualizat.arrived) pleacaDinNou(id);
       setError(null);
       const numar = numarSiModel(actualizat.name)[0];
       anunta(actualizat.arrived ? `${numar} a ajuns la ${actualizat.destination}` : `${numar} este din nou în tranzit`, actualizat.arrived ? "ok" : "info");
@@ -148,7 +157,7 @@ export default function TiruriPage() {
   const inTranzit = tiruri.filter((t) => !t.arrived).length;
   const sosite = tiruri.length - inTranzit;
   const internationale = tiruri.filter((t) => t.category !== "Domestic").length;
-  const kmRamasi = tiruri.reduce((s, t) => s + (t.arrived ? 0 : rezumatTraseu(t)?.ramas ?? 0), 0);
+  const kmRamasi = tiruri.reduce((s, t) => s + (t.arrived ? 0 : rezumatTraseu(t, progres(t))?.ramas ?? 0), 0);
   const procentSosite = tiruri.length ? Math.round((sosite / tiruri.length) * 100) : 0;
   const selectat = tiruri.find((t) => t.id === selectatId);
 
@@ -168,7 +177,8 @@ export default function TiruriPage() {
     .toSorted((a, b) => {
       if (sortare === "numar") return a.name.localeCompare(b.name, "ro");
       if (sortare === "destinatie") return a.destination.localeCompare(b.destination, "ro");
-      if (sortare === "progres") return progresPentruSortare(b) - progresPentruSortare(a);
+      // tirurile fără traseu la final
+      if (sortare === "progres") return (progres(b) ?? -1) - (progres(a) ?? -1);
       return 0;
     });
 
@@ -218,6 +228,11 @@ export default function TiruriPage() {
             <span style={{ flexGrow: sosite }} className={styles.ratioDone}></span>
           </div>
         </section>
+
+        {/* toate cursele pe o singură hartă, în timp real (simulare) */}
+        <div className={styles.fleetMap}>
+          <HartaFlotei tiruri={vizibile} onSelect={setSelectatId} />
+        </div>
 
           <section className={`panel ${styles.listPanel}`} aria-labelledby="flota-titlu">
             <div className="panel-head">
@@ -310,7 +325,6 @@ export default function TiruriPage() {
                 tiruri={vizibile}
                 totalFlota={tiruri.length}
                 vedere={vedere}
-                acum={acum}
                 onToggle={handleToggleSosit}
                 onDelete={handleDelete}
                 onSelect={setSelectatId}

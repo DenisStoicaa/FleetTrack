@@ -4,7 +4,7 @@ import TirCard from "./TirCard.jsx";
 import TirRand from "./TirRand.jsx";
 import styles from "./TirList.module.css";
 
-export default function TirList({ tiruri, totalFlota, vedere, acum, onToggle, onDelete, onSelect, onReset }) {
+export default function TirList({ tiruri, totalFlota, vedere, onToggle, onDelete, onSelect, onReset }) {
   // Flota goală: return timpuriu cu mesaj explicit și o fotografie cu rampele goale
   if (totalFlota === 0) {
     return (
@@ -54,7 +54,6 @@ export default function TirList({ tiruri, totalFlota, vedere, acum, onToggle, on
           key={tir.id}
           tir={tir}
           pozitie={pozitie}
-          acum={acum}
           onToggle={onToggle}
           onDelete={onDelete}
           onSelect={onSelect}

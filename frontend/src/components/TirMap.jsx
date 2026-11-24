@@ -3,7 +3,8 @@
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import TirTraseu from "./TirTraseu.jsx";
-import { TRASEE } from "../data/harta.js";
+import { traseuPentru } from "../traseu.js";
+import { useProgres } from "../simulare.js";
 import { numarSiModel } from "../format.js";
 import styles from "./TirMap.module.css";
 
@@ -19,7 +20,9 @@ export default function TirMap({ tir, onClose }) {
   const inchide = () => dialogRef.current.close();
 
   const [numar, model] = numarSiModel(tir.name);
-  const traseu = TRASEE[tir.id];
+  const traseu = traseuPentru(tir);
+  const progres = useProgres(tir);
+  const laDestinatie = !tir.arrived && progres >= 1;
 
   return (
     <dialog
@@ -37,9 +40,9 @@ export default function TirMap({ tir, onClose }) {
                 <span className="plate-eu">RO</span>
                 {numar}
               </span>
-              <span className={tir.arrived ? "status done" : "status"}>
+              <span className={tir.arrived || laDestinatie ? "status done" : "status"}>
                 <span className="dot" aria-hidden="true"></span>
-                {tir.arrived ? "Sosit" : "În tranzit"}
+                {tir.arrived ? "Sosit" : laDestinatie ? "La destinație" : "În tranzit"}
               </span>
             </p>
             <h2 id="map-title" className={styles.title}>{model || tir.name}</h2>

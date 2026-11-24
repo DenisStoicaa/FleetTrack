@@ -73,6 +73,14 @@
   from { left: 0; }
 }
 
+/* simularea: bara și camionul înaintează lin între doi pași ai ceasului */
+.fill { transition: width 0.3s linear; }
+.truck { transition: left 0.3s linear; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fill, .truck { transition: none; }
+}
+
 .compact { gap: 6px; }
 .compact .truck { width: 20px; height: 20px; margin: -10px 0 0 -10px; font-size: 0.68rem; }
 .compact .ends { font-size: 0.76rem; }

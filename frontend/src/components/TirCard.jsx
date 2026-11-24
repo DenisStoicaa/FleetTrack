@@ -5,11 +5,15 @@ import RutaProgres from "./RutaProgres.jsx";
 import { ETICHETE_REMORCA, FOTO_REMORCA, ICONITE_REMORCA } from "../constants.js";
 import { initiale, numarSiModel, nuanta } from "../format.js";
 import { formatKm, formatOre, formatSosire, rezumatTraseu } from "../traseu.js";
+import { useProgres, useSimulare } from "../simulare.js";
 import styles from "./TirCard.module.css";
 
-export default function TirCard({ tir, pozitie, acum, onToggle, onDelete, onSelect }) {
+export default function TirCard({ tir, pozitie, onToggle, onDelete, onSelect }) {
   const [numar, model] = numarSiModel(tir.name);
-  const rezumat = rezumatTraseu(tir);
+  // poziția și ora vin din simularea în timp real
+  const { ceas: acum } = useSimulare();
+  const rezumat = rezumatTraseu(tir, useProgres(tir));
+  const laDestinatie = rezumat?.laDestinatie;
 
   return (
     <li
@@ -28,9 +32,9 @@ export default function TirCard({ tir, pozitie, acum, onToggle, onDelete, onSele
           alt={`Camion cu remorcă ${ETICHETE_REMORCA[tir.trailerType].toLowerCase()}`}
           loading="lazy"
         />
-        <span className={tir.arrived ? "status done" : "status"}>
+        <span className={tir.arrived || laDestinatie ? "status done" : "status"}>
           <span className="dot" aria-hidden="true"></span>
-          {tir.arrived ? "Sosit" : "În tranzit"}
+          {tir.arrived ? "Sosit" : laDestinatie ? "La destinație" : "În tranzit"}
         </span>
         {/* același lucru și din tastatură */}
         <button
@@ -94,12 +98,18 @@ export default function TirCard({ tir, pozitie, acum, onToggle, onDelete, onSele
           </div>
           <div>
             <dt>Rămas</dt>
-            <dd>{rezumat && !tir.arrived ? formatKm(rezumat.ramas) : "—"}</dd>
+            <dd>{rezumat && !tir.arrived && !laDestinatie ? formatKm(rezumat.ramas) : "—"}</dd>
           </div>
           <div>
-            <dt>{tir.arrived ? "Stare" : "Sosire est."}</dt>
-            <dd title={rezumat && !tir.arrived ? `~ ${formatOre(rezumat.oreRamase)}` : undefined}>
-              {tir.arrived ? "Livrat" : rezumat ? formatSosire.format(acum + rezumat.oreRamase * 3600 * 1000) : "—"}
+            <dt>{tir.arrived || laDestinatie ? "Stare" : "Sosire est."}</dt>
+            <dd title={rezumat && !tir.arrived && !laDestinatie ? `~ ${formatOre(rezumat.oreRamase)}` : undefined}>
+              {tir.arrived
+                ? "Livrat"
+                : laDestinatie
+                  ? "De confirmat"
+                  : rezumat
+                    ? formatSosire.format(acum + rezumat.oreRamase * 3600 * 1000)
+                    : "—"}
             </dd>
           </div>
         </dl>

@@ -1,54 +1,12 @@
 // Traseul unui tir: harta (schiță SVG, mockup), poziția curentă, distanțele și opririle.
 // Folosit în fereastra cu harta (TirMap) și în pagina de detaliu (TirDetaliuPage).
 // Datele de traseu sunt de test, din data/harta.js.
-import { useState } from "react";
-import { ORASE, TRASEE, MARI } from "../data/harta.js";
-import { VITEZA_MEDIE, calculeazaTraseu, formatKm, formatOre } from "../traseu.js";
+import { ORASE, MARI } from "../data/harta.js";
+import { VITEZA_MEDIE, calculeazaTraseu, formatKm, formatOre, traseuPentru } from "../traseu.js";
+import { useProgres, useSimulare } from "../simulare.js";
+import { cadru, caleSvg, proiectie, taieCurba, tronsoaneCurbe } from "../harta-svg.js";
+import SimulareControl from "./SimulareControl.jsx";
 import styles from "./TirTraseu.module.css";
-
-// [lat, lon] -> [x, y] pe hartă (1° latitudine = 100 de unități)
-function proiectie([lat, lon]) {
-  return [lon * 69, (56 - lat) * 100];
-}
-
-// Curbă netedă prin toate punctele: câte o curbă Bézier pentru fiecare tronson
-function tronsoaneCurbe(p) {
-  return p.slice(0, -1).map((p1, i) => {
-    const p0 = p[i - 1] ?? p1;
-    const p2 = p[i + 1];
-    const p3 = p[i + 2] ?? p2;
-    const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6];
-    const c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
-    return [p1, c1, c2, p2];
-  });
-}
-
-// Prima parte a unei curbe Bézier, tăiată la t (algoritmul de Casteljau)
-function taieCurba([a, b, c, d], t) {
-  const mij = (p, q) => [p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t];
-  const ab = mij(a, b), bc = mij(b, c), cd = mij(c, d);
-  const abc = mij(ab, bc), bcd = mij(bc, cd);
-  return [a, ab, abc, mij(abc, bcd)];
-}
-
-function caleSvg(curbe) {
-  if (curbe.length === 0) return "";
-  const pt = (p) => `${p[0].toFixed(1)} ${p[1].toFixed(1)}`;
-  return `M${pt(curbe[0][0])}` + curbe.map(([, c1, c2, p]) => ` C${pt(c1)} ${pt(c2)} ${pt(p)}`).join("");
-}
-
-// Cadrul hărții: tot traseul, cu margine, în formatul cerut (lățime / înălțime)
-function cadru(puncte, format) {
-  const xs = puncte.map((p) => p[0]);
-  const ys = puncte.map((p) => p[1]);
-  let x = Math.min(...xs), y = Math.min(...ys);
-  let w = Math.max(...xs) - x, h = Math.max(...ys) - y;
-  const margine = Math.max(w, h) * 0.16 + 40;
-  x -= margine; y -= margine; w += 2 * margine; h += 2 * margine;
-  if (w / h < format) { x -= (h * format - w) / 2; w = h * format; }
-  else { y -= (w / format - h) / 2; h = w / format; }
-  return { x, y, w, h };
-}
 
 const formatSosire = new Intl.DateTimeFormat("ro-RO", {
   weekday: "long",
@@ -57,20 +15,21 @@ const formatSosire = new Intl.DateTimeFormat("ro-RO", {
 });
 
 export default function TirTraseu({ tir }) {
-  // momentul deschiderii, pentru ora estimată de sosire (fix cât timp e deschis traseul)
-  const [acum] = useState(() => Date.now());
-  const traseu = TRASEE[tir.id];
+  // ora simulată, pentru ora estimată de sosire; progresul vine din simulare
+  const { ceas } = useSimulare();
+  const progres = useProgres(tir);
+  const traseu = traseuPentru(tir);
 
   if (!traseu) {
     return <p className={styles.empty}>Pentru acest tir nu există încă un traseu.</p>;
   }
-  return <Harta tir={tir} traseu={traseu} acum={acum} />;
+  return <Harta tir={tir} traseu={traseu} acum={ceas} progres={progres} />;
 }
 
-function Harta({ tir, traseu, acum }) {
+function Harta({ tir, traseu, acum, progres }) {
   const { opriri } = traseu;
-  // un tir bifat ca sosit stă la destinație, indiferent de progresul din date
-  const progres = tir.arrived ? 1 : traseu.progres;
+  // un tir bifat ca sosit stă la destinație; altfel, poziția din simulare
+  const laDestinatie = !tir.arrived && progres >= 1;
   const { coordonate, total, parcurs, index, t } = calculeazaTraseu(opriri, progres);
   const ramas = total - parcurs;
   const oreRamase = ramas / VITEZA_MEDIE;
@@ -93,7 +52,8 @@ function Harta({ tir, traseu, acum }) {
   const urmatoarea = opriri[atinse + 1];
 
   let locatie;
-  if (progres >= 1) locatie = `La destinație, ${opriri.at(-1)}`;
+  if (laDestinatie) locatie = `La destinație, ${opriri.at(-1)} · așteaptă confirmarea`;
+  else if (progres >= 1) locatie = `La destinație, ${opriri.at(-1)}`;
   else if (progres <= 0) locatie = `La plecare, ${opriri[0]}`;
   else locatie = `Între ${opriri[index]} și ${opriri[index + 1]}`;
 
@@ -156,7 +116,7 @@ function Harta({ tir, traseu, acum }) {
   return (
     <>
       <div className={tir.arrived ? `${styles.canvas} ${styles.done}` : styles.canvas} style={{ "--map-ratio": format }}>
-        <span className={styles.badge}>Hartă demonstrativă · poziție simulată</span>
+        <span className={styles.badge}>Hartă demonstrativă · poziție simulată în timp real</span>
         <svg
           viewBox={`${vb.x} ${vb.y} ${vb.w} ${vb.h}`}
           className={styles.svg}
@@ -228,7 +188,8 @@ function Harta({ tir, traseu, acum }) {
           )}
 
           {/* tirul: punct care pulsează + eticheta cu numărul */}
-          <g transform={`translate(${pozitie[0]} ${pozitie[1]})`} className={styles.truck}>
+          {/* poziția se schimbă la fiecare pas al simulării; tranziția CSS o face să alunece */}
+          <g style={{ transform: `translate(${pozitie[0]}px, ${pozitie[1]}px)` }} className={styles.truck}>
             <circle r={2.6 * u} className={styles.truckPulse} />
             <circle r={1.7 * u} className={styles.truckDot} />
             <svg x={-1.1 * u} y={-1.1 * u} width={2.2 * u} height={2.2 * u} viewBox="0 0 24 24" className={styles.truckIcon}>
@@ -249,6 +210,12 @@ function Harta({ tir, traseu, acum }) {
           </g>
         </svg>
       </div>
+
+      {!tir.arrived && (
+        <div className={styles.simBar}>
+          <SimulareControl compact />
+        </div>
+      )}
 
       <dl className={styles.stats}>
         <div className={`${styles.stat} ${styles.statWide}`}>
@@ -272,7 +239,9 @@ function Harta({ tir, traseu, acum }) {
         </div>
         <div className={styles.stat}>
           <dt>{progres >= 1 ? "Status" : "Sosire estimată"}</dt>
-          <dd>{progres >= 1 ? "Livrat" : formatSosire.format(acum + oreRamase * 3600 * 1000)}</dd>
+          <dd>
+            {laDestinatie ? "Sosit, de confirmat" : progres >= 1 ? "Livrat" : formatSosire.format(acum + oreRamase * 3600 * 1000)}
+          </dd>
         </div>
       </dl>
 

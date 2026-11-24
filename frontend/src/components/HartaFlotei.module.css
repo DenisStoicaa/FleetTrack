@@ -1,0 +1,146 @@
+/* Harta flotei: toate tirurile pe aceeași hartă, în pozițiile din simulare */
+.panel { margin-bottom: 28px; }
+
+.controls { margin: -6px 0 12px; }
+
+.canvas {
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--map-land);
+}
+
+.canvas::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 60px -10px rgb(0 0 0 / 0.25);
+}
+
+.badge {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 1;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--pill);
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  backdrop-filter: blur(6px);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: var(--map-ratio, 1.6);
+  font-family: var(--font-body);
+}
+
+.land { fill: var(--map-land); stroke: none; }
+.sea { fill: var(--map-sea); stroke: none; }
+.gridLine { stroke: var(--map-grid); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.town { fill: var(--faint); stroke: none; opacity: 0.7; }
+
+.seaLabel,
+.cityLabel {
+  paint-order: stroke;
+  stroke: var(--map-land);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+.seaLabel { fill: var(--map-sea-text); stroke: var(--map-sea); font-style: italic; text-anchor: middle; }
+.cityLabel { fill: var(--muted); font-weight: 600; }
+.cityLabel.end { fill: var(--text); font-weight: 700; }
+
+.city {
+  fill: var(--surface);
+  stroke: var(--map-road);
+  stroke-width: 2.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.road {
+  stroke: var(--map-road);
+  stroke-width: 3;
+  stroke-dasharray: 2 6;
+  vector-effect: non-scaling-stroke;
+}
+
+/* porțiunea parcursă, în culoarea tirului (--c, din JSX) */
+.roadDone {
+  stroke: var(--c);
+  stroke-width: 4.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.roadDone.arrived { stroke: var(--done); opacity: 0.55; }
+
+/* tirul: alunecă lin între doi pași ai ceasului (250 ms) */
+.truck {
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.3s linear;
+}
+
+.dot {
+  fill: var(--c);
+  stroke: var(--surface);
+  stroke-width: 3;
+  vector-effect: non-scaling-stroke;
+}
+
+.pulse {
+  fill: var(--c);
+  opacity: 0.3;
+  stroke: none;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pulse 1.8s ease-out infinite;
+}
+
+@keyframes pulse {
+  from { transform: scale(0.6); opacity: 0.45; }
+  to { transform: scale(1.6); opacity: 0; }
+}
+
+.tag {
+  fill: var(--surface);
+  stroke: var(--c);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.tagText {
+  fill: var(--text);
+  stroke: none;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  text-anchor: middle;
+}
+
+.stopped .dot { fill: var(--done); }
+.stopped .tag { stroke: var(--done); }
+.arrived { opacity: 0.75; }
+
+.truck:hover .tag,
+.truck:focus-visible .tag { fill: var(--c); }
+.truck:hover .tagText,
+.truck:focus-visible .tagText { fill: #111; }
+.truck:focus-visible .dot { stroke: var(--text); stroke-width: 4; }
+
+.empty { margin: 0; color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  .truck { transition: none; }
+  .pulse { animation: none; }
+}

@@ -5,10 +5,12 @@ import RutaProgres from "./RutaProgres.jsx";
 import { ETICHETE_REMORCA, ICONITE_REMORCA } from "../constants.js";
 import { initiale, numarSiModel, nuanta } from "../format.js";
 import { rezumatTraseu } from "../traseu.js";
+import { useProgres } from "../simulare.js";
 import styles from "./TirRand.module.css";
 
 export default function TirRand({ tir, pozitie, onToggle, onDelete, onSelect }) {
   const [numar, model] = numarSiModel(tir.name);
+  const rezumat = rezumatTraseu(tir, useProgres(tir)); // poziția din simulare
 
   return (
     <li
@@ -42,7 +44,7 @@ export default function TirRand({ tir, pozitie, onToggle, onDelete, onSelect }) 
         <span>{tir.driver}</span>
       </div>
 
-      <RutaProgres tir={tir} rezumat={rezumatTraseu(tir)} compact />
+      <RutaProgres tir={tir} rezumat={rezumat} compact />
 
       <div className={styles.trailer}>
         <span className={`badge badge-${tir.trailerType}`}>

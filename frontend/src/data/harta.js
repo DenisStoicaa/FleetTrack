@@ -49,7 +49,18 @@ export const TRASEE = {
     opriri: ["Cluj-Napoca", "Sibiu", "Brașov", "București", "Ruse", "Veliko Tarnovo", "Stara Zagora", "Edirne", "Istanbul"],
     progres: 0.62,
   },
+  4: {
+    opriri: ["Brașov", "Sibiu", "Deva", "Arad", "Budapesta", "Viena"],
+    progres: 0.18,
+  },
+  5: {
+    opriri: ["Timișoara", "Craiova", "București", "Constanța"],
+    progres: 1,
+  },
 };
+
+// Plecarea implicită pentru un tir fără traseu (de exemplu unul adăugat din formular)
+export const DEPOU = "București";
 
 // Contururi aproximative ale mărilor, doar ca fundal pentru schiță
 export const MARI = [
